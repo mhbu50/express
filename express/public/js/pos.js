@@ -2,6 +2,9 @@
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 //prevent selection
-document.addEventListener('mousedown', function(e) {
-  e.preventDefault();
-}, false);
+if (typeof document.onselectstart != "undefined") {
+  document.onselectstart = new Function("return false");
+} else {
+  document.onmousedown = new Function("return false");
+  document.onmouseup = new Function("return true");
+}
