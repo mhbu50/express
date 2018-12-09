@@ -15,4 +15,7 @@ setTimeout(function() {
   $('[data-value ="Consumable"]').remove();
   $('[data-value ="POS Items"]').remove();
   $('[data-value ="Stock Item"]').remove();
+  $('[data-value ="Processed Raw Material"]').remove();
+  $('[data-value ="Additions To The Sandwich - اضافات"]').remove();
+  $('[data-value ="اضافات"]').remove();
 }, 2000);
