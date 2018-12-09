@@ -84,8 +84,7 @@ def get_rendered_addons(addons,item_code):
 
 		for row in cleand_addon:
 			addons_template=""
-			x = [ str(doc_addon['name']) for doc_addon in row['addon']]
-			lisaddon = [ addon['name'] for addon in addons_list]
+			x = [ doc_addon['name'] for doc_addon in row['addon']]
 
 			for addon in addons_list:
 				if addon['name'] in x:
