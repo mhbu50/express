@@ -53,11 +53,11 @@ def get_rendered_addons(addons,item_code):
 		addons_list = frappe.get_all('Addon', fields=['name', 'price'])
 		cleand_addon = []
 		for row in data:
-			if str(row['parent_item']) == str(item_code):
+			if str(row['parent_item']) == item_code:
 				if len(cleand_addon)>0:
 					if str(row['group_id']) in [str(idg['group_id']) for idg in cleand_addon]:
 						for i ,idg in enumerate(cleand_addon):
-							if (str(row['group_id']) == str(idg['group_id'])): 
+							if (str(row['group_id']) == str(idg['group_id'])):
 								cleand_addon[i]['addon'].append({
 							    "name":row['addon'],"price":row["price"]
 									})
