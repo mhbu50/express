@@ -100,7 +100,7 @@ try {
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         var receipt = "";
 
-        // console.log("ip",ip);        
+        console.log("ip",ip);        
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
