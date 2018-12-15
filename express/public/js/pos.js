@@ -91,6 +91,16 @@ try {
               a.push(arr[i][feild]);
       return a;
       }
+
+      function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+            break;
+          }
+        }
+      }
+
       var receipt = "";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
       // console.log("group_item_cart",group_item_cart);      
@@ -175,6 +185,7 @@ try {
           });
         });
         send_to_printer(ip);
+        sleep(1500);
       });
 
       //send to remote local_printer
@@ -197,9 +208,13 @@ try {
 			}
 			function cbCreateDevice_printer(devobj, retcode) {
 				if( retcode == 'OK' ) {
+          console.log("in cbCreateDevice_printer");
+          
 					printer = devobj;
 					executeAddedCode();
 				} else {
+          console.log("retcode",retcode);
+          
 					alert(retcode);
 				}
 			}
