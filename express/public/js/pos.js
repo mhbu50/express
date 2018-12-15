@@ -91,14 +91,14 @@ try {
               a.push(arr[i][feild]);
       return a;
       }
-
+      var receipt = "";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
       // console.log("group_item_cart",group_item_cart);      
       //get all group in items cart
       $.each(group_item_cart, function(index,group) {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
-        var receipt = "";
+        receipt = "";
 
         console.log("ip",ip);        
         //filter items by group in cart
@@ -188,6 +188,8 @@ try {
       
 			function cbConnect(data) {
 				if(data == 'OK') {
+          console.log("in cbConnect");
+          
 					ePosDev.createDevice('local_printer', ePosDev.DEVICE_TYPE_PRINTER, {'crypto' : true, 'buffer' : false}, cbCreateDevice_printer);
 				} else {
 					alert(data);
@@ -202,8 +204,10 @@ try {
 				}
 			}
 
-			function executeAddedCode() {			
-      printer.addText("\t addon: "+ bg.addon + "\n");
+			function executeAddedCode() {	
+        console.log("receipt",receipt);
+        		
+      printer.addText(receipt);
 			printer.brightness = 1.0;
 			printer.halftone = printer.HALFTONE_DITHER;
 			printer.addCut(printer.CUT_FEED);
