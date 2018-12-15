@@ -8,6 +8,11 @@ if (typeof document.onselectstart != "undefined") {
   document.onmousedown = new Function("return false");
   document.onmouseup = new Function("return true");
 }
+
+// $("a:contains('Print')").on("click", function() {
+//   console.log("in contains");
+//   console.log($(this).text());
+// });
 setTimeout(function() {
   $('[data-value ="All Item Groups"]').remove();
   $('[data-value ="Raw Material"]').remove();
@@ -16,6 +21,199 @@ setTimeout(function() {
   $('[data-value ="POS Items"]').remove();
   $('[data-value ="Stock Item"]').remove();
   $('[data-value ="Processed Raw Material"]').remove();
-  $('[data-value ="Additions To The Sandwich - اضافات"]').remove();
+  $('[data-value ="اضافات - Additions To The Sandwich"]').remove();
   $('[data-value ="اضافات"]').remove();
-}, 2000);
+  // $("a:contains('Print')").on("click", function() {
+  //   console.log($(this).text());
+  // });
+}, 3000);
+
+
+try {
+  erpnext.pos.PointOfSale = erpnext.pos.PointOfSale.extend({});
+  console.log("this1", this);
+
+  function send_kds(cart, pos_profile) {
+    //get cart items
+    frappe.call({
+      method: 'express.api.send_cart_kds',
+      args: {
+        "cart": cart,
+        // "pos_profile": me.frm.selected_doc.pos_profile
+      },
+      callback: function(r) {
+        log("bb");
+      }
+    });
+  }
+
+		 class PointOfSale extends erpnext.pos.PointOfSale {
+    //for online moode
+    submit_sales_invoice() {
+      console.log("submit for online moode");
+
+      console.log("this1", this);
+      console.log("this.frm.selected_doc.pos_profile = ", this.frm.selected_doc.pos_profile);
+      var me = this;
+      send_kds(me.frm.selected_doc, me.frm.selected_doc.pos_profile)
+      super.submit_sales_invoice();
+    }
+
+    //for offline model
+    print_dialog() {
+      console.log("print_dialog offline moode");
+      var me = this;
+
+      this.msgprint = frappe.msgprint(
+        `<a class="btn btn-primary print_doc"
+          style="margin-right: 5px;">${__('Print')}</a>
+        <a class="btn btn-default new_doc">${__('New')}</a>`);
+  
+      $('.print_doc').click(function () {
+        var html = frappe.render(me.print_template_data, me.frm.doc)
+        for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {   
+          //nedd to change with jquery print lib     
+          me.print_document(html);
+        } 
+        me.send_to_printers();           	
+      })
+  
+      $('.new_doc').click(function () {
+        me.msgprint.hide()
+        me.make_new_cart()
+      })
+    }
+  send_to_printers(){
+
+      var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
+      // console.log("group_item_cart",group_item_cart);      
+      //get all group in items cart
+      $.each(group_item_cart, function(index,group) {
+        //take group printer IP
+        var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
+        var receipt = "";
+
+        // console.log("ip",ip);        
+        //filter items by group in cart
+				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
+          return n.item_group == group;
+        });
+        console.log("\n -----------------------------------------\ngroup",group);        
+        // console.log(" items_cart : " ,items_cart);
+        
+        //loop items_cart
+        $.each(items_cart, function(index,ic) {
+          var addon_flag = false;
+          // console.log("ic",ic.item_code);
+          //check if it has addone
+          var item_addons_num = cur_pos.frm.doc.addons.filter(function(value){
+            return value.parent_item == ic.item_code;
+          }).length ;
+          // console.log("item_addons_num",item_addons_num);
+          
+          if(item_addons_num == 0){
+          let qty = cur_pos.frm.doc.items.find(x => x.item_code === ic.item_code).qty;
+          console.log("*******************************");
+          console.log("Item = "+ ic.item_code +" Qty = " + qty);
+          console.log("*******************************");
+
+          receipt += ("*******************************\n"); 
+          receipt += ("Item = "+ ic.item_code +" Qty = " + qty+"\n");
+          receipt += ("*******************************\n");
+
+          // printer.addText('*******************************\n');
+          // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
+          // printer.addText('*******************************\n');     
+          }     
+          //filter addons_table by item
+          item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
+          return n.parent_item == ic.item_code;
+          });
+          // console.log("item_addon",item_addons);
+
+          //get uniques parents_item from addons
+          var unique_gruop = uniques(item_addons,"group_id");
+          // console.log("unique_gruop",unique_gruop);
+          
+          $.each(unique_gruop ,function(index,g) {
+            var total_group = item_addons.filter(function(value){
+            return value.group_id == g;
+          }).length ;
+          // console.log("g",g);
+          //filter by group_id
+          var by_group = item_addons.filter(function(value){
+            return value.group_id == g;
+  
+              });
+
+          // console.log("by_group",by_group);
+          console.log("*******************************");
+          console.log("Item = "+ ic.item_code +" Qty = "+ by_group.length);
+          console.log("*******************************");
+          
+          receipt += ("*******************************\n")
+          receipt += ("Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n");
+          receipt += ("*******************************\n");
+          // printer.addText('*******************************\n');
+          // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
+          // printer.addText('*******************************\n');          
+            
+          $.each(by_group ,function(index,bg) {
+            // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
+            console.log("\t\taddon: ",bg.addon);
+
+            receipt += ("\t\taddon: ",bg.addon.split("-")[1].trim() + "\n");
+            // printer.addText("\t addon: "+ bg.addon.split("-")[1].trim() + "\n");
+          });
+          });
+        });
+
+      });
+
+			//send to remote local_printer
+			var printer = null;            
+			var ePosDev = new epson.ePOSDevice();
+      console.log("22222222");
+
+      ePosDev.connect('192.168.1.232', 8008, cbConnect);
+      
+			function cbConnect(data) {
+				if(data == 'OK') {
+					ePosDev.createDevice('local_printer', ePosDev.DEVICE_TYPE_PRINTER, {'crypto' : true, 'buffer' : false}, cbCreateDevice_printer);
+				} else {
+					alert(data);
+				}
+			}
+			function cbCreateDevice_printer(devobj, retcode) {
+				if( retcode == 'OK' ) {
+					printer = devobj;
+					executeAddedCode();
+				} else {
+					alert(retcode);
+				}
+			}
+
+			function uniques(arr,feild) {
+			    var a = [];
+			    for (var i=0, l=arr.length; i<l; i++)
+			        if (a.indexOf(arr[i][feild]) === -1 && arr[i][feild] !== '')
+			            a.push(arr[i][feild]);
+			    return a;
+			}
+
+			function executeAddedCode() {			
+      printer.addText("\t addon: "+ bg.addon + "\n");
+			printer.brightness = 1.0;
+			printer.halftone = printer.HALFTONE_DITHER;
+			printer.addCut(printer.CUT_FEED);
+			printer.send();
+			}
+  }
+
+  }
+  erpnext.pos.PointOfSale = PointOfSale;
+
+ 
+} catch (e) {
+  console.log("error", e);
+}

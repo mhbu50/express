@@ -1,6 +1,7 @@
 {
     "js/express.js": [
-      "public/js/epos-2.9.0.js"
+      "public/js/epos-2.9.0.js",
+      "public/js/printThis.js"
 
     ]
 }
