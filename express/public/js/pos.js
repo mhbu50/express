@@ -174,15 +174,17 @@ try {
           });
           });
         });
-
+        send_to_printer(ip);
       });
 
-			//send to remote local_printer
-			var printer = null;            
+      //send to remote local_printer
+      function send_to_printer(ip) {
+        var printer = null;            
 			var ePosDev = new epson.ePOSDevice();
       console.log("22222222");
-
-      ePosDev.connect('192.168.1.232', 8008, cbConnect);
+      ePosDev.connect(ip, 8008, cbConnect);
+      }
+			
       
 			function cbConnect(data) {
 				if(data == 'OK') {
