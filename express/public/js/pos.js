@@ -198,7 +198,7 @@ try {
         // append paper cutting
         builder.addCut();
 
-        var url = 'http://' + ip + '/cgi-bin/epos/service.cgi?devid=' + devid + '&timeout=' + timeout;
+        var url = 'http://' + ip + '/cgi-bin/epos/service.cgi?devid=local_printer&timeout=60000';
         var epos = new epson.ePOSPrint(url);
 
         // register callback function
