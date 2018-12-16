@@ -185,9 +185,7 @@ try {
       function send_to_printer(ip,receipt) {
         debugger;
         var builder = new epson.ePOSBuilder();
-        if (layout) {
-            builder.addLayout(builder.LAYOUT_RECEIPT, 580);
-        }
+        builder.addLayout(builder.LAYOUT_RECEIPT, 580);
         builder.addTextLang('en').addTextSmooth(true);
 
         // append message
