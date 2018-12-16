@@ -17,8 +17,9 @@ def get_addons():
 	addons = frappe.get_all('Addon', fields=['name', 'price'])
 	result = ""
 	for addon in addons:
-		result = result + """<label class="checkbox-inline">
-		<input class= "addons_add" type="checkbox" data-price={} value="{}">{}</label>""".format(
+		result = result + """<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;    font-size: 18px;">
+		<input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+		 type="checkbox" data-price={} value="{}">{}</label>""".format(
 			addon.price,addon.name,addon.name
 			)
 	return result
@@ -33,12 +34,14 @@ def get_addon(addon):
 
 	for addon in addons:
 		if data['addon'] == addon.name:
-			result = result + """<label class="checkbox-inline">
-			<input class= "addons_add" type="checkbox" checked data-price={} value="{}">{}</label>""".format(
+			result = result + """<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;    font-size: 18px;">
+			<input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+			type="checkbox" checked data-price={} value="{}">{}</label>""".format(
 				data['price'],data['addon'],data['addon'])
 		else:
-			result = result + """<label class="checkbox-inline">
-			<input class= "addons_add" type="checkbox" data-price={} value="{}">{}</label>""".format(
+			result = result + """<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;     font-size: 18px;" >
+			<input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+			 type="checkbox" data-price={} value="{}">{}</label>""".format(
 				addon.price,addon.name,addon.name
 				)
 	return result
@@ -53,7 +56,7 @@ def get_rendered_addons(addons,item_code):
 		addons_list = frappe.get_all('Addon', fields=['name', 'price'])
 		cleand_addon = []
 		for row in data:
-			if str(row['parent_item']) == item_code:
+			if row['parent_item'] == item_code:
 				if len(cleand_addon)>0:
 					if str(row['group_id']) in [str(idg['group_id']) for idg in cleand_addon]:
 						for i ,idg in enumerate(cleand_addon):
@@ -88,12 +91,14 @@ def get_rendered_addons(addons,item_code):
 
 			for addon in addons_list:
 				if addon['name'] in x:
-					addons_template = addons_template + """<label class="checkbox-inline">
-					<input class= "addons_add" type="checkbox" checked data-price={} value="{}">{}</label>""".format(
+					addons_template = addons_template + """<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+					<input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+					type="checkbox" checked data-price={} value="{}">{}</label>""".format(
 						addon['price'],addon['name'],addon['name'])
 				else:
-					addons_template = addons_template + """<label class="checkbox-inline">
-					<input class= "addons_add" type="checkbox" data-price={} value="{}">{}</label>""".format(
+					addons_template = addons_template + """<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+					<input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+					  type="checkbox" data-price={} value="{}">{}</label>""".format(
 						addon['price'],addon['name'],addon['name']
 						)
 
