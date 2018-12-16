@@ -9,10 +9,6 @@ if (typeof document.onselectstart != "undefined") {
   document.onmouseup = new Function("return true");
 }
 
-// $("a:contains('Print')").on("click", function() {
-//   console.log("in contains");
-//   console.log($(this).text());
-// });
 setTimeout(function() {
   $('[data-value ="All Item Groups"]').remove();
   $('[data-value ="Raw Material"]').remove();
@@ -23,9 +19,6 @@ setTimeout(function() {
   $('[data-value ="Processed Raw Material"]').remove();
   $('[data-value ="اضافات - Additions To The Sandwich"]').remove();
   $('[data-value ="اضافات"]').remove();
-  // $("a:contains('Print')").on("click", function() {
-  //   console.log($(this).text());
-  // });
 }, 3000);
 
 
@@ -68,16 +61,16 @@ try {
         `<a class="btn btn-primary print_doc"
           style="margin-right: 5px;">${__('Print')}</a>
         <a class="btn btn-default new_doc">${__('New')}</a>`);
-  
+
       $('.print_doc').click(function () {
         var html = frappe.render(me.print_template_data, me.frm.doc)
-        for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {   
-          //nedd to change with jquery print lib     
+        for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {
+          //nedd to change with jquery print lib
           me.print_document(html);
-        } 
-        me.send_to_printers();           	
+        }
+        me.send_to_printers();
       })
-  
+
       $('.new_doc').click(function () {
         me.msgprint.hide()
         me.make_new_cart()
@@ -103,21 +96,21 @@ try {
 
       var receipt = "";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
-      // console.log("group_item_cart",group_item_cart);      
+      // console.log("group_item_cart",group_item_cart);
       //get all group in items cart
       $.each(group_item_cart, function(index,group) {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         receipt = "";
 
-        console.log("ip",ip);        
+        console.log("ip",ip);
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
         });
-        console.log("\n -----------------------------------------\ngroup",group);        
+        console.log("\n -----------------------------------------\ngroup",group);
         // console.log(" items_cart : " ,items_cart);
-        
+
         //loop items_cart
         $.each(items_cart, function(index,ic) {
           var addon_flag = false;
@@ -127,21 +120,21 @@ try {
             return value.parent_item == ic.item_code;
           }).length ;
           // console.log("item_addons_num",item_addons_num);
-          
+
           if(item_addons_num == 0){
           let qty = cur_pos.frm.doc.items.find(x => x.item_code === ic.item_code).qty;
           console.log("*******************************");
           console.log("Item = "+ ic.item_code +" Qty = " + qty);
           console.log("*******************************");
 
-          receipt += ("*******************************\n"); 
+          receipt += ("*******************************\n");
           receipt += ("Item = "+ ic.item_code +" Qty = " + qty+"\n");
           receipt += ("*******************************\n");
 
           // printer.addText('*******************************\n');
           // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
-          // printer.addText('*******************************\n');     
-          }     
+          // printer.addText('*******************************\n');
+          }
           //filter addons_table by item
           var item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
           return n.parent_item == ic.item_code;
@@ -151,7 +144,7 @@ try {
           //get uniques parents_item from addons
           var unique_gruop = uniques(item_addons,"group_id");
           // console.log("unique_gruop",unique_gruop);
-          
+
           $.each(unique_gruop ,function(index,g) {
             var total_group = item_addons.filter(function(value){
             return value.group_id == g;
@@ -160,21 +153,21 @@ try {
           //filter by group_id
           var by_group = item_addons.filter(function(value){
             return value.group_id == g;
-  
+
               });
 
           // console.log("by_group",by_group);
           console.log("*******************************");
           console.log("Item = "+ ic.item_code +" Qty = "+ by_group.length);
           console.log("*******************************");
-          
+
           receipt += ("*******************************\n")
           receipt += ("Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n");
           receipt += ("*******************************\n");
           // printer.addText('*******************************\n');
           // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
-          // printer.addText('*******************************\n');          
-            
+          // printer.addText('*******************************\n');
+
           $.each(by_group ,function(index,bg) {
             // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
             console.log("\t\taddon: ",bg.addon);
@@ -184,56 +177,57 @@ try {
           });
           });
         });
-        send_to_printer(ip);
-        sleep(1500);
+        send_to_printer(ip,receipt);
+        // sleep(1000);
       });
 
       //send to remote local_printer
-      function send_to_printer(ip) {
-        var printer = null;            
-			var ePosDev = new epson.ePOSDevice();
-      console.log("22222222");
-      ePosDev.connect(ip, 8008, cbConnect);
-      }
-			
-      
-			function cbConnect(data) {
-				if(data == 'OK') {
-          console.log("in cbConnect");
-          
-					ePosDev.createDevice('local_printer', ePosDev.DEVICE_TYPE_PRINTER, {'crypto' : true, 'buffer' : false}, cbCreateDevice_printer);
-				} else {
-					alert(data);
-				}
-			}
-			function cbCreateDevice_printer(devobj, retcode) {
-				if( retcode == 'OK' ) {
-          console.log("in cbCreateDevice_printer");
-          
-					printer = devobj;
-					executeAddedCode();
-				} else {
-          console.log("retcode",retcode);
-          
-					alert(retcode);
-				}
-			}
+      function send_to_printer(ip,receipt) {
+        debugger;
+        var builder = new epson.ePOSBuilder();
+        if (layout) {
+            builder.addLayout(builder.LAYOUT_RECEIPT, 580);
+        }
+        builder.addTextLang('en').addTextSmooth(true);
 
-			function executeAddedCode() {	
-        console.log("receipt",receipt);
-        		
-      printer.addText(receipt);
-			printer.brightness = 1.0;
-			printer.halftone = printer.HALFTONE_DITHER;
-			printer.addCut(printer.CUT_FEED);
-			printer.send();
-			}
+        // append message
+        builder.addTextStyle(false, false, true);
+        builder.addText('Please wait until your ticket\n');
+        builder.addText('number is called.\n');
+        builder.addTextStyle(false, false, false);
+        builder.addFeedUnit(16);
+
+        // append paper cutting
+        builder.addCut();
+
+        var url = 'http://' + ip + '/cgi-bin/epos/service.cgi?devid=' + devid + '&timeout=' + timeout;
+        var epos = new epson.ePOSPrint(url);
+
+        // register callback function
+        epos.onreceive = function (res) {
+            // close print dialog
+            console.log("close print dialog");
+            // print failure
+            if (!res.success) {
+                // show error message
+                console.log("show error message");
+            }
+        }
+
+        // register callback function
+        epos.onerror = function (err) {
+            // show error message
+            console.log("onerror");
+        }
+
+        epos.send(builder.toString());
+      }
   }
 
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
- 
+
 } catch (e) {
   console.log("error", e);
 }
