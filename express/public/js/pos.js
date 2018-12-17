@@ -127,9 +127,9 @@ try {
           console.log("Item = "+ ic.item_code +" Qty = " + qty);
           console.log("*******************************");
 
-          receipt += ("*******************************\n");
-          receipt += ("Item = "+ ic.item_code +" Qty = " + qty+"\n");
-          receipt += ("*******************************\n");
+          receipt += "*******************************\n";
+          receipt += "Item = "+ ic.item_code +" Qty = " + qty+"\n";
+          receipt += "*******************************\n";
 
           // printer.addText('*******************************\n');
           // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
@@ -161,9 +161,9 @@ try {
           console.log("Item = "+ ic.item_code +" Qty = "+ by_group.length);
           console.log("*******************************");
 
-          receipt += ("*******************************\n")
-          receipt += ("Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n");
-          receipt += ("*******************************\n");
+          receipt += "*******************************\n";
+          receipt += "Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n";
+          receipt += "*******************************\n";
           // printer.addText('*******************************\n');
           // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
           // printer.addText('*******************************\n');
@@ -172,7 +172,7 @@ try {
             // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
             console.log("\t\taddon: ",bg.addon);
 
-            receipt += ("\t\taddon: ",bg.addon.split("-")[1].trim() + "\n");
+            receipt += "\t\taddon: ",bg.addon.split("-")[1].trim() + "\n";
             // printer.addText("\t addon: "+ bg.addon.split("-")[1].trim() + "\n");
           });
           });
@@ -219,6 +219,12 @@ try {
         }
 
         epos.send(builder.toString());
+
+        //destroy class instance
+        epos = null;
+        delete epos;
+        builder = null;
+        delete builder;
       }
   }
 
