@@ -222,9 +222,7 @@ try {
 
         //destroy class instance
         epos = null;
-        delete epos;
         builder = null;
-        delete builder;
       }
   }
 
