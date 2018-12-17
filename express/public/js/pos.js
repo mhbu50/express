@@ -190,8 +190,7 @@ try {
 
         // append message
         builder.addTextStyle(false, false, true);
-        builder.addText('Please wait until your ticket\n');
-        builder.addText('number is called.\n');
+        builder.addText(receipt+'\n');
         builder.addTextStyle(false, false, false);
         builder.addFeedUnit(16);
 
