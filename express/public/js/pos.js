@@ -228,6 +228,7 @@ try {
   create_new(){
     super.create_new();
     try {
+      debugger;
       var str_order = localStorage.getItem("order");
       var date = localStorage.getItem("date");
       //get a numeric value from str_order, put it in order
