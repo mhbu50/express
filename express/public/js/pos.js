@@ -225,6 +225,30 @@ try {
       }
   }
 
+  create_new(){
+    super.create_new();
+    try {
+      var str_order = localStorage.getItem("order");
+      var date = localStorage.getItem("date");
+      //get a numeric value from str_order, put it in order
+      if ((str_order == null || str_order == "null") || 
+      (date == null || date != moment().format('MM D, YYYY')) ){
+        order = 0;
+        date = moment().format('MM D, YYYY');
+      } else {
+        order = parseInt(str_order);
+      }
+      //increment order
+      order++;
+      me.frm.doc.order = order;
+      //store values
+      localStorage.setItem("order", order);
+      localStorage.setItem("date", date);
+		} catch (e) {
+			frappe.throw(__("LocalStorage is full , did not save"))
+		}
+  }
+
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
