@@ -234,8 +234,8 @@ try {
       //get a numeric value from str_order, put it in order
       if ((str_order == null || str_order == "null") || 
       (date == null || date != moment().format('MM D, YYYY')) ){
-        order = 0;
-        date = moment().format('MM D, YYYY');
+        var order = 0;
+        var date = moment().format('MM D, YYYY');
       } else {
         order = parseInt(str_order);
       }
