@@ -101,7 +101,7 @@ try {
       $.each(group_item_cart, function(index,group) {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
-        receipt = "";
+        receipt = "\n\n Order:#"+this.frm.doc.order+"\n";
 
         console.log("ip",ip);
         //filter items by group in cart
@@ -228,7 +228,6 @@ try {
   create_new(){
     super.create_new();
     try {
-      debugger;
       var str_order = localStorage.getItem("order");
       var date = localStorage.getItem("date");
       //get a numeric value from str_order, put it in order
