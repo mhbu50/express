@@ -241,7 +241,7 @@ try {
       }
       //increment order
       order++;
-      me.frm.doc.order = order;
+      this.frm.doc.order = order;
       //store values
       localStorage.setItem("order", order);
       localStorage.setItem("date", date);
