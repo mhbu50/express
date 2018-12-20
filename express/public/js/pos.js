@@ -170,9 +170,9 @@ try {
 
           $.each(by_group ,function(index,bg) {
             // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
-            console.log("\taddon: ",bg.addon);
+            console.log("\taddon: ",bg.addon.split("-")[1].trim() );
 
-            receipt += "\taddon: ",bg.addon.split("-")[1].trim() + "\n";
+            receipt += "\taddon: "+ bg.addon.split("-")[1].trim() + "\n";
             // printer.addText("\t addon: "+ bg.addon.split("-")[1].trim() + "\n");
           });
           });
