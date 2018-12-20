@@ -93,7 +93,7 @@ try {
           }
         }
       }
-
+      var me = this;
       var receipt = "";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
       // console.log("group_item_cart",group_item_cart);
@@ -101,7 +101,7 @@ try {
       $.each(group_item_cart, function(index,group) {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
-        receipt = "\n\n Order:#"+this.frm.doc.order+"\n";
+        receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
 
         console.log("ip",ip);
         //filter items by group in cart
