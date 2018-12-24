@@ -85,16 +85,9 @@ try {
       return a;
       }
 
-      function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-      }
       var me = this;
       var receipt = "";
+      var order_receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
       // console.log("group_item_cart",group_item_cart);
       //get all group in items cart
@@ -113,7 +106,6 @@ try {
 
         //loop items_cart
         $.each(items_cart, function(index,ic) {
-          var addon_flag = false;
           // console.log("ic",ic.item_code);
           //check if it has addone
           var item_addons_num = cur_pos.frm.doc.addons.filter(function(value){
@@ -125,15 +117,12 @@ try {
           let qty = cur_pos.frm.doc.items.find(x => x.item_code === ic.item_code).qty;
           console.log("*******************************");
           console.log("Item = "+ ic.item_code +" Qty = " + qty);
-          console.log("*******************************");
 
           receipt += "*******************************\n";
           receipt += "Item = "+ ic.item_code +" Qty = " + qty+"\n";
-          receipt += "*******************************\n";
 
-          // printer.addText('*******************************\n');
-          // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
-          // printer.addText('*******************************\n');
+          order_receipt += "*******************************\n";
+          order_receipt += "Item = "+ ic.item_code +" Qty = " + qty+"\n";
           }
           //filter addons_table by item
           var item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
@@ -164,24 +153,28 @@ try {
           receipt += "*******************************\n";
           receipt += "Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n";
           receipt += "*******************************\n";
-          // printer.addText('*******************************\n');
-          // printer.addText('Item = '+ item +' Count = '+ ' total_group\n');
-          // printer.addText('*******************************\n');
+
+          order_receipt += "*******************************\n";
+          order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n";
+          order_receipt += "*******************************\n";
 
           $.each(by_group ,function(index,bg) {
             // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
-            console.log("\taddon: ",bg.addon.split("-")[1].trim() );
+            console.log("\tAddon: ",bg.addon.split("-")[1].trim() );
 
-            receipt += "\taddon: "+ bg.addon.split("-")[1].trim() + "\n";
-            // printer.addText("\t addon: "+ bg.addon.split("-")[1].trim() + "\n");
+            receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
+            order_receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
           });
           });
         });
         send_to_printer(ip,receipt);
-        // sleep(1000);
       });
+      //send complete order to order receipt printer
+      if(cur_pos.frm.doc.printer_ip){
+        send_to_printer(cur_pos.frm.doc.printer_ip,order_receipt);
+      }
 
-      //send to remote local_printer
+      //send to remote local printer
       function send_to_printer(ip,receipt) {
         debugger;
         var builder = new epson.ePOSBuilder();
@@ -203,11 +196,11 @@ try {
         // register callback function
         epos.onreceive = function (res) {
             // close print dialog
-            console.log("close print dialog");
+            console.log("Order Sent");
             // print failure
             if (!res.success) {
                 // show error message
-                console.log("show error message");
+                console.log("Show error message");
             }
         }
 
