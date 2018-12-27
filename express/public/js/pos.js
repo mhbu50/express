@@ -147,15 +147,15 @@ try {
 
           // console.log("by_group",by_group);
           console.log("*******************************");
-          console.log("Item = "+ ic.item_code +" Qty = "+ by_group.length);
+          console.log("Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty);
           console.log("*******************************");
 
           receipt += "*******************************\n";
-          receipt += "Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n";
+          receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
           receipt += "*******************************\n";
 
           order_receipt += "*******************************\n";
-          order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group.length+"\n";
+          order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
           order_receipt += "*******************************\n";
 
           $.each(by_group ,function(index,bg) {
