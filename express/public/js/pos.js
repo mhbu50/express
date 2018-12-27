@@ -169,7 +169,7 @@ try {
       //send complete order to order receipt printer
       if(cur_pos.pos_profile_data.printer_ip){
         console.log("order_receipt",order_receipt);
-        send_to_printer(cur_pos.frm.doc.printer_ip,order_receipt);
+        send_to_printer(cur_pos.pos_profile_data.printer_ip,order_receipt);
       }
 
       //send to remote local printer
