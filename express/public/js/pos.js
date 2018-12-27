@@ -84,7 +84,7 @@ try {
               a.push(arr[i][feild]);
       return a;
       }
-
+      debugger;
       var me = this;
       var receipt = "";
       var order_receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
@@ -94,16 +94,14 @@ try {
       $.each(group_item_cart, function(index,group) {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
-        receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
-
         console.log("ip",ip);
+        receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
         });
         console.log("\n -----------------------------------------\ngroup",group);
         // console.log(" items_cart : " ,items_cart);
-
         //loop items_cart
         $.each(items_cart, function(index,ic) {
           // console.log("ic",ic.item_code);
@@ -112,7 +110,6 @@ try {
             return value.parent_item == ic.item_code;
           }).length ;
           // console.log("item_addons_num",item_addons_num);
-
           if(item_addons_num == 0){
           let qty = cur_pos.frm.doc.items.find(x => x.item_code === ic.item_code).qty;
           console.log("*******************************");
@@ -171,12 +168,12 @@ try {
       });
       //send complete order to order receipt printer
       if(cur_pos.frm.doc.printer_ip){
+        console.log("order_receipt",order_receipt);
         send_to_printer(cur_pos.frm.doc.printer_ip,order_receipt);
       }
 
       //send to remote local printer
       function send_to_printer(ip,receipt) {
-        debugger;
         var builder = new epson.ePOSBuilder();
         builder.addLayout(builder.LAYOUT_RECEIPT, 580);
         builder.addTextLang('en').addTextSmooth(true);
