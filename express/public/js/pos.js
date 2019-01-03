@@ -92,10 +92,13 @@ try {
       // console.log("group_item_cart",group_item_cart);
       //get all group in items cart
       $.each(group_item_cart, function(index,group) {
+        if(group == "اضافات - Additions To The Sandwich"){
+          continue;
+        }
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         console.log("ip",ip);
-        receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
+        receipt = "\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
