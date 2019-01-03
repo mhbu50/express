@@ -93,7 +93,7 @@ try {
       //get all group in items cart
       $.each(group_item_cart, function(index,group) {
         if(group == "اضافات - Additions To The Sandwich"){
-          continue;
+          return;
         }
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
