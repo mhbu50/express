@@ -230,6 +230,7 @@ try {
       //increment order
       order++;
       this.frm.doc.order = order;
+      this.frm.doc.phone = cur_pos.pos_profile_data.phone;
       //store values
       localStorage.setItem("order", order);
       localStorage.setItem("date", date);
