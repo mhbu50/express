@@ -87,15 +87,18 @@ try {
       debugger;
       var me = this;
       var receipt = "";
-      var order_receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
+      var order_receipt = "\nCollection Order\n\n Order:#" + me.frm.doc.order + "\n";
       var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
       // console.log("group_item_cart",group_item_cart);
       //get all group in items cart
       $.each(group_item_cart, function(index,group) {
+        if(group == "اضافات - Additions To The Sandwich"){
+          return;
+        }
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         console.log("ip",ip);
-        receipt = "\n\n Order:#" + me.frm.doc.order + "\n";
+        receipt = "\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
@@ -132,36 +135,32 @@ try {
           // console.log("unique_gruop",unique_gruop);
 
           $.each(unique_gruop ,function(index,g) {
-            var total_group = item_addons.filter(function(value){
-            return value.group_id == g;
-          }).length ;
-          // console.log("g",g);
-          //filter by group_id
-          var by_group = item_addons.filter(function(value){
-            return value.group_id == g;
+            // console.log("g",g);
+            //filter by group_id
+            var by_group = item_addons.filter(function(value){
+              return value.group_id == g;
+                });
 
-              });
+            // console.log("by_group",by_group);
+            console.log("*******************************");
+            console.log("Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty);
+            console.log("*******************************");
 
-          // console.log("by_group",by_group);
-          console.log("*******************************");
-          console.log("Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty);
-          console.log("*******************************");
+            receipt += "*******************************\n";
+            receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
+            receipt += "*******************************\n";
 
-          receipt += "*******************************\n";
-          receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
-          receipt += "*******************************\n";
+            order_receipt += "*******************************\n";
+            order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
+            order_receipt += "*******************************\n";
 
-          order_receipt += "*******************************\n";
-          order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
-          order_receipt += "*******************************\n";
+            $.each(by_group ,function(index,bg) {
+              // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
+              console.log("\tAddon: ",bg.addon.split("-")[1].trim() );
 
-          $.each(by_group ,function(index,bg) {
-            // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
-            console.log("\tAddon: ",bg.addon.split("-")[1].trim() );
-
-            receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
-            order_receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
-          });
+              receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
+              order_receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
+            });
           });
         });
         send_to_printer(ip,receipt);
@@ -231,6 +230,7 @@ try {
       //increment order
       order++;
       this.frm.doc.order = order;
+      this.frm.doc.phone = cur_pos.pos_profile_data.phone;
       //store values
       localStorage.setItem("order", order);
       localStorage.setItem("date", date);
