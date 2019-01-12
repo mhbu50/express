@@ -24,8 +24,6 @@ def get_addons():
 			)
 	return result
 
-
-
 @frappe.whitelist()
 def get_addon(addon):
 	data = json.loads(addon)
@@ -82,9 +80,6 @@ def get_rendered_addons(addons,item_code):
 						"parent_qty": row["parent_qty"],
 						"parent_item": row["parent_item"]
 						})
-
-
-
 		for row in cleand_addon:
 			addons_template=""
 			x = [ doc_addon['name'] for doc_addon in row['addon']]
@@ -104,7 +99,7 @@ def get_rendered_addons(addons,item_code):
 
 			parent_template = parent_template+""" 
 						<div class="modal-body">
-							<h3 data-value ={}>Total Number of Items{}</h3>
+							<h3 class="collapsible-custom" data-value ={}>Total Number of Items{}</h3>
 							<div class="items-for-addons" data-group-qty ={}>
 							{}
 							</div>
