@@ -44,8 +44,6 @@ try {
     //for online moode
     submit_sales_invoice() {
       console.log("submit for online moode");
-
-      console.log("this1", this);
       console.log("this.frm.selected_doc.pos_profile = ", this.frm.selected_doc.pos_profile);
       var me = this;
       send_kds(me.frm.selected_doc, me.frm.selected_doc.pos_profile)
@@ -56,14 +54,19 @@ try {
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
-
+	  var html = frappe.render(me.print_template_data, me.frm.doc);
+      if(cur_pos.pos_profile_data.print_after_submit){
+        me.print_document(html);
+        me.send_to_printers();
+        me.make_new_cart();
+        return;
+      }
       this.msgprint = frappe.msgprint(
         `<a class="btn btn-primary print_doc"
           style="margin-right: 5px;">${__('Print')}</a>
         <a class="btn btn-default new_doc">${__('New')}</a>`);
 
       $('.print_doc').click(function () {
-        var html = frappe.render(me.print_template_data, me.frm.doc)
         for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {
           //nedd to change with jquery print lib
           me.print_document(html);
@@ -76,6 +79,23 @@ try {
         me.make_new_cart()
       })
     }
+         
+   print_document(html){
+   $('<iframe>', {
+    name: 'myiframe',
+    class: 'printFrame'
+  })
+  .appendTo('body')
+  .contents().find('body')
+  .append(html);
+
+  window.frames['myiframe'].focus();
+  window.frames['myiframe'].print();
+
+  setTimeout(() => { $(".printFrame").remove(); }, 1000)
+   
+   }         
+         
   send_to_printers(){
     function uniques(arr,feild) {
       var a = [];
@@ -98,7 +118,7 @@ try {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         console.log("ip",ip);
-        receipt = "\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
+        receipt = "\n\n\n\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
