@@ -260,7 +260,7 @@ try {
   }
 
   get_data_from_server(){
-    super.get_data_from_server();
+    
     frappe.call({
 			method: "express.api.get_addon_list",
 			callback: function (r) {
@@ -269,6 +269,7 @@ try {
         localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
 			}
     })
+    super.get_data_from_server();
   }
   }
   erpnext.pos.PointOfSale = PointOfSale;
