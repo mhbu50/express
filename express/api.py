@@ -13,8 +13,7 @@ import json
 
 @frappe.whitelist()
 def get_addon_list():
-	return "PONG"
-	# return frappe.db.sql(""" select name,parent,parentfield,addon_order from tabAddon where parent is not null ORDER BY addon_order ASC""", as_dict=1)
+	return frappe.db.sql(""" select name,parent,parentfield,addon_order from tabAddon where parent is not null ORDER BY addon_order ASC""", as_dict=1)
 
 @frappe.whitelist()
 def get_addons():
