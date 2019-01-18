@@ -109,3 +109,7 @@ def get_rendered_addons(addons,item_code):
 
 	else:
 		return "something went wrong"
+
+def get_addon_List():
+	return frappe.db.sql(""" select name,parent,parentfield,addon_order from tabAddon where parent is not null 
+	ORDER BY addon_order ASC""", as_dict=1)

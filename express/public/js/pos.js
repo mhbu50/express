@@ -24,7 +24,7 @@ setTimeout(function() {
 
 try {
   erpnext.pos.PointOfSale = erpnext.pos.PointOfSale.extend({});
-  console.log("this1", this);
+
 
   function send_kds(cart, pos_profile) {
     //get cart items
@@ -56,14 +56,20 @@ try {
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
+      var html = frappe.render(me.print_template_data, me.frm.doc);
+      if(cur_pos.pos_profile_data.print_after_submit){
+        me.print_document(html);
+        me.send_to_printers();
+        me.make_new_cart();
+        return;
+      }
 
       this.msgprint = frappe.msgprint(
         `<a class="btn btn-primary print_doc"
           style="margin-right: 5px;">${__('Print')}</a>
         <a class="btn btn-default new_doc">${__('New')}</a>`);
 
-      $('.print_doc').click(function () {
-        var html = frappe.render(me.print_template_data, me.frm.doc)
+      $('.print_doc').click(function () {       
         for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {
           //nedd to change with jquery print lib
           me.print_document(html);
@@ -76,6 +82,7 @@ try {
         me.make_new_cart()
       })
     }
+
   send_to_printers(){
     function uniques(arr,feild) {
       var a = [];
@@ -98,7 +105,7 @@ try {
         //take group printer IP
         var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
         console.log("ip",ip);
-        receipt = "\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
+        receipt = "\n\n\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
         //filter items by group in cart
 				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
           return n.item_group == group;
@@ -237,6 +244,17 @@ try {
 		} catch (e) {
 			frappe.throw(__("LocalStorage is full , did not save"))
 		}
+  }
+
+  get_data_from_server(){
+    super.get_data_from_server();
+    var me = this;
+		frappe.call({
+			method: "express.express.api.get_addon_List",
+			callback: function (r) {
+				console.log("get_data_from_server",r);        				 
+			}
+		})
   }
 
   }
