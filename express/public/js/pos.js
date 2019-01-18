@@ -259,16 +259,17 @@ try {
 		}
   }
 
-  // get_data_from_server(){
-  //   super.get_data_from_server();
-  //   var me = this;
-	// 	frappe.call({
-	// 		method: "express.express.api.get_addon_List",
-	// 		callback: function (r) {
-	// 			console.log("get_data_from_server",r);        				 
-	// 		}
-	// 	})
-  // }
+  get_data_from_server(){
+    super.get_data_from_server();
+
+    frappe.call({
+			method: "express.api.get_addon_list",
+			callback: function (r) {
+        console.log("get_data_from_server",r);        
+        cur_pos.addon_list = r.message;				 
+			}
+    })
+  }
 
   }
   erpnext.pos.PointOfSale = PointOfSale;
