@@ -11,6 +11,9 @@ from frappe.desk.moduleview import get
 import json
 
 
+@frappe.whitelist()
+def get_addon_list():
+	return frappe.db.sql(""" select name,parent,parentfield,addon_order from tabAddon where parent is not null ORDER BY addon_order ASC""", as_dict=1)
 
 @frappe.whitelist()
 def get_addons():
@@ -109,7 +112,3 @@ def get_rendered_addons(addons,item_code):
 
 	else:
 		return "something went wrong"
-@frappe.whitelist()
-def get_addon_List():
-	return frappe.db.sql(""" select name,parent,parentfield,addon_order from tabAddon where parent is not null 
-	ORDER BY addon_order ASC""", as_dict=1)
