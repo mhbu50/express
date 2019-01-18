@@ -259,17 +259,13 @@ try {
 		}
   }
 
-  get_data_from_server(callback){
+  get_data_from_server(){
     super.get_data_from_server();
-    var me = this;
     frappe.call({
 			method: "express.api.get_addon_list",
 			callback: function (r) {
         console.log("get_data_from_server",r);     
-        localStorage.setItem('addon_list', JSON.stringify(r.message));   
-        if (callback) {
-					callback();
-				}			 
+        localStorage.setItem('addon_list', JSON.stringify(r.message));   		 
 			}
     })
   }
