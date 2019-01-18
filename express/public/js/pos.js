@@ -265,7 +265,7 @@ try {
 			method: "express.api.get_addon_list",
 			callback: function (r) {
         console.log("get_data_from_server",r);     
-        localStorage.setItem('addon_list', JSON.stringify(r.message));   		 
+        localStorage.setItem('addon_list', JSON.stringify(r));   		 
 			}
     })
   }
