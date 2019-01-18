@@ -270,12 +270,6 @@ try {
 			}
     })
   }
-
-  init_master_data(r){
-    super.init_master_data();
-
-  }
-
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
