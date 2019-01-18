@@ -259,8 +259,8 @@ try {
 		}
   }
 
-  init_master_data(){
-    super.init_master_data();
+  onload(){
+    super.onload();
     frappe.call({
 			method: "express.api.get_addon_list",
 			callback: function (r) {
