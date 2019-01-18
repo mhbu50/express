@@ -260,16 +260,16 @@ try {
   }
 
   get_data_from_server(){
-    
-    frappe.call({
-			method: "express.api.get_addon_list",
-			callback: function (r) {
-        console.log("get_data_from_server");     
-        var addon_list = r.message;
-        localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
-			}
-    })
     super.get_data_from_server();
+    // frappe.call({
+		// 	method: "express.api.get_addon_list",
+		// 	callback: function (r) {
+    //     console.log("get_data_from_server");     
+    //     var addon_list = r.message;
+    //     localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
+		// 	}
+    // });
+
   }
   }
   erpnext.pos.PointOfSale = PointOfSale;
