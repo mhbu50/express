@@ -281,9 +281,25 @@ try {
       }
     }
 
-    make_item_list (){
-      super.make_item_list();
-      console.log("make_item_list this",this);
+    make_control (){
+      super.make_control();
+      console.log("make_control this");
+      var me = this;
+      frappe.call({
+        method: "express.api.get_items_order",
+        freeze: true,
+        callback: function (r) {
+  
+          var items_order = r.message;
+          console.log("items_order",items_order);
+          
+          localStorage.setItem('items_order', JSON.stringify(items_order));   	
+          me.items_order = items_order;	 
+        }
+      });
+      if(localStorage.getItem("items_order") !== "undefined"){
+      this.items_order =  JSON.parse(localStorage.getItem("items_order"));
+      }
       
     }
 
