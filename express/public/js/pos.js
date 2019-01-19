@@ -255,7 +255,7 @@ try {
       localStorage.setItem("order", order);
       localStorage.setItem("date", date);
 		} catch (e) {
-			frappe.throw(__("LocalStorage is full , did not save"))
+			frappe.throw(__("LocalStorage is full , did not save order or date"))
 		}
   }
 
