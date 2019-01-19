@@ -272,7 +272,7 @@ try {
         localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
 			}
     });
-    cur_pos.addon_list =  localStorage.getItem("addon_list ");
+    // cur_pos.addon_list =  localStorage.getItem("addon_list ");
 
   }
   }
