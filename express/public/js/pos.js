@@ -274,7 +274,7 @@ try {
     });
     console.log("onload this",this);
     
-    this.addon_list =  localStorage.getItem("addon_list");
+    this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
 
   }
   }
