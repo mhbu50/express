@@ -273,8 +273,9 @@ try {
 			}
     });
     console.log("onload this",this);
-    
+    if(localStorage.getItem("addon_list")){
     this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
+    }
 
   }
   }
