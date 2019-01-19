@@ -274,7 +274,7 @@ try {
     });
     console.log("onload this",this);
     
-    // cur_pos.addon_list =  localStorage.getItem("addon_list ");
+    this.addon_list =  localStorage.getItem("addon_list ");
 
   }
   }
