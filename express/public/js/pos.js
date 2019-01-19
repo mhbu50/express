@@ -263,13 +263,17 @@ try {
 
   onload(){
     super.onload();
+    var me = this;
     frappe.call({
       method: "express.api.get_addon_list",
       freeze: true,
 			callback: function (r) {
         console.log("get_data_from_server");     
         var addon_list = r.message;
-        localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
+        console.log("addon_list",addon_list);
+        
+        localStorage.setItem('addon_list', JSON.stringify(addon_list));   	
+        me.addon_list = addon_list;	 
 			}
     });
     console.log("onload this",this);
