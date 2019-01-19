@@ -272,7 +272,7 @@ try {
         localStorage.setItem('addon_list', JSON.stringify(addon_list));   		 
 			}
     });
-    console.log("cur_pos",cur_pos);
+    console.log("onload this",this);
     
     // cur_pos.addon_list =  localStorage.getItem("addon_list ");
 
