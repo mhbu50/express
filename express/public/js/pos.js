@@ -283,7 +283,7 @@ try {
 
     make_item_list (){
       super.make_item_list();
-      console.log("make_item_list this",make_item_list);
+      console.log("make_item_list this",this);
       
     }
 
