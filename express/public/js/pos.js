@@ -40,7 +40,7 @@ try {
     });
   }
 
-		 class PointOfSale extends erpnext.pos.PointOfSale {
+	class PointOfSale extends erpnext.pos.PointOfSale {
     //for online moode
     submit_sales_invoice() {
       console.log("submit for online moode");
@@ -54,7 +54,7 @@ try {
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
-	  var html = frappe.render(me.print_template_data, me.frm.doc);
+	    var html = frappe.render(me.print_template_data, me.frm.doc);
       if(cur_pos.pos_profile_data.print_after_submit){
         me.print_document(html);
         me.send_to_printers();
@@ -80,30 +80,29 @@ try {
       })
     }
          
-   print_document(html){
-   $('<iframe>', {
-    name: 'myiframe',
-    class: 'printFrame'
-  })
-  .appendTo('body')
-  .contents().find('body')
-  .append(html);
+    print_document(html){
+      $('<iframe>', {
+        name: 'myiframe',
+        class: 'printFrame'
+      })
+      .appendTo('body')
+      .contents().find('body')
+      .append(html);
 
-  window.frames['myiframe'].focus();
-  window.frames['myiframe'].print();
+      window.frames['myiframe'].focus();
+      window.frames['myiframe'].print();
 
-  setTimeout(() => { $(".printFrame").remove(); }, 1000)
-   
-   }         
+      setTimeout(() => { $(".printFrame").remove(); }, 1000)   
+    }         
          
-  send_to_printers(){
-    function uniques(arr,feild) {
-      var a = [];
-      for (var i=0, l=arr.length; i<l; i++)
-          if (a.indexOf(arr[i][feild]) === -1 && arr[i][feild] !== '')
-              a.push(arr[i][feild]);
-      return a;
-      }
+    send_to_printers(){
+      function uniques(arr,feild) {
+        var a = [];
+        for (var i=0, l=arr.length; i<l; i++)
+            if (a.indexOf(arr[i][feild]) === -1 && arr[i][feild] !== '')
+                a.push(arr[i][feild]);
+        return a;
+        }
       debugger;
       var me = this;
       var receipt = "";
@@ -232,56 +231,62 @@ try {
         epos = null;
         builder = null;
       }
-  }
-
-  create_new(){
-    super.create_new();
-    try {
-      var str_order = localStorage.getItem("order");
-      var date = localStorage.getItem("date");
-      //get a numeric value from str_order, put it in order
-      if ((str_order == null || str_order == "null") || 
-      (date == null || date != moment().format('MM D, YYYY')) ){
-        var order = 0;
-        var date = moment().format('MM D, YYYY');
-      } else {
-        order = parseInt(str_order);
-      }
-      //increment order
-      order++;
-      this.frm.doc.order = order;
-      this.frm.doc.phone = cur_pos.pos_profile_data.phone;
-      //store values
-      localStorage.setItem("order", order);
-      localStorage.setItem("date", date);
-		} catch (e) {
-      console.log("e",e);
-      
-			frappe.throw(__("LocalStorage is full , did not save order or date"))
-		}
-  }
-
-  onload(){
-    super.onload();
-    var me = this;
-    frappe.call({
-      method: "express.api.get_addon_list",
-      freeze: true,
-			callback: function (r) {
-        console.log("get_data_from_server");     
-        var addon_list = r.message;
-        console.log("addon_list",addon_list);
-        
-        localStorage.setItem('addon_list', JSON.stringify(addon_list));   	
-        me.addon_list = addon_list;	 
-			}
-    });
-    console.log("onload this",this);
-    if(localStorage.getItem("addon_list") !== "undefined"){
-    this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
     }
 
-  }
+    create_new(){
+      super.create_new();
+      try {
+        var str_order = localStorage.getItem("order");
+        var date = localStorage.getItem("date");
+        //get a numeric value from str_order, put it in order
+        if ((str_order == null || str_order == "null") || 
+        (date == null || date != moment().format('MM D, YYYY')) ){
+          var order = 0;
+          var date = moment().format('MM D, YYYY');
+        } else {
+          order = parseInt(str_order);
+        }
+        //increment order
+        order++;
+        this.frm.doc.order = order;
+        this.frm.doc.phone = cur_pos.pos_profile_data.phone;
+        //store values
+        localStorage.setItem("order", order);
+        localStorage.setItem("date", date);
+      } catch (e) {
+        console.log("e",e);
+        
+        frappe.throw(__("LocalStorage is full , did not save order or date"))
+      }
+    }
+
+    onload(){
+      super.onload();
+      var me = this;
+      frappe.call({
+        method: "express.api.get_addon_list",
+        freeze: true,
+        callback: function (r) {
+          console.log("get_data_from_server");     
+          var addon_list = r.message;
+          console.log("addon_list",addon_list);
+          
+          localStorage.setItem('addon_list', JSON.stringify(addon_list));   	
+          me.addon_list = addon_list;	 
+        }
+      });
+      console.log("onload this",this);
+      if(localStorage.getItem("addon_list") !== "undefined"){
+      this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
+      }
+    }
+
+    make_item_list (){
+      super.make_item_list();
+      console.log("make_item_list this",make_item_list);
+      
+    }
+
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
