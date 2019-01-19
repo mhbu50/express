@@ -17,6 +17,10 @@ def get_addon_list():
 	ORDER BY addon_order ASC""", as_dict=1)
 
 @frappe.whitelist()
+def get_items_order():
+	return frappe.db.sql(""" select item_code,pos_order_position from tabItem where pos_order_position != 0 order by pos_order_position ASC""", as_dict=1)
+
+@frappe.whitelist()
 def get_addons():
 	addons = frappe.get_all('Addon', fields=['name', 'price'])
 	result = ""
