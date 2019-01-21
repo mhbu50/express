@@ -305,8 +305,10 @@ try {
     add_to_cart(){
       super.add_to_cart();
       cur_pos.frm.doc.addons.findIndex(p => p.parent_item == "Chicken Crispy Sandwich");
-      var c = $(this).parents(".pos-bill-item").attr("data-item-code");
+      var c = $(this).attr("data-item-code");
       console.log("cc:",c);
+      console.log("this",this);
+      
     }
 
   }
