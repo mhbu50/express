@@ -299,8 +299,14 @@ try {
       });
       if(localStorage.getItem("items_order") !== "undefined"){
       this.items_order =  JSON.parse(localStorage.getItem("items_order"));
-      }
-      
+      }      
+    }
+
+    add_to_cart(){
+      super.add_to_cart();
+      cur_pos.frm.doc.addons.findIndex(p => p.parent_item == "Chicken Crispy Sandwich");
+      var c = $(this).parents(".pos-bill-item").attr("data-item-code");
+      console.log("cc:",c);
     }
 
   }
