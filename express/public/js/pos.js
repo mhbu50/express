@@ -307,10 +307,10 @@ try {
       if(cur_pos.frm.doc.addons.length >0){
         console.log("this.items[0]",this.items[0]);
         
-      var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0].name);
+      var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0].name && p.addon == "قياسي - Standard");
       console.log("addon_item_index",addon_item_index);
       
-      cur_pos.frm.doc.addons[addon_item_index].parent_qty = cur_pos.frm.doc.addons[addon_item_index].parent_qty +1;            
+      cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) +1;            
       }
     }
 
