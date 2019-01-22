@@ -304,11 +304,8 @@ try {
 
     add_to_cart(){
       super.add_to_cart();
-      cur_pos.frm.doc.addons.findIndex(p => p.parent_item == "Chicken Crispy Sandwich");
-      var c = $(this).attr("data-item-code");
-      console.log("cc:",c);
-      console.log("this",this);
-      
+      var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0]);
+      cur_pos.frm.doc.addons[addon_item_index].parent_qty = cur_pos.frm.doc.addons[addon_item_index].parent_qty +1;            
     }
 
   }
