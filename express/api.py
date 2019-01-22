@@ -13,7 +13,7 @@ import json
 
 @frappe.whitelist()
 def get_addon_list():
-	return frappe.db.sql(""" select name as 'addon',parent as 'item_code',addon_order from tabAddon where parent is not null 
+	return frappe.db.sql(""" select item as 'addon',parent as 'item_code',addon_order from tabAddon where parent is not null 
 	ORDER BY addon_order ASC""", as_dict=1)
 
 @frappe.whitelist()
