@@ -304,8 +304,10 @@ try {
 
     add_to_cart(){
       super.add_to_cart();
+      if(cur_pos.frm.doc.addons.length >0){
       var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0]);
       cur_pos.frm.doc.addons[addon_item_index].parent_qty = cur_pos.frm.doc.addons[addon_item_index].parent_qty +1;            
+      }
     }
 
   }
