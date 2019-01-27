@@ -411,7 +411,7 @@ try {
     var addons = cur_pos.frm.doc.addons;
     var call_api = false;
     if (addons.length > 0) {
-        for (x in addons) {
+        for (var x in addons) {
             if (addons[x].parent_item) {
                 if (item_code == addons[x].parent_item) {
                     call_api = true;
