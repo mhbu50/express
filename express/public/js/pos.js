@@ -316,24 +316,17 @@ try {
     get_sorted_item_groups(){
       let list = [];
       $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {       
-        list[i] = data.item_group;
+        list[i] = { "item_group":data.item_group,"image":data.image};
       });
       return list;
     }
     make_search(){
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups()
-      let isFirst = true;
-      let item_groups_html = sorted_item_groups.map(function(item_group) {
-        if(isFirst){
-          isFirst = false;
-          return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;' class='btn item-active' data-value='"+item_group+"'>"+item_group+"</button>";
-        }else	
-          return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;' class='btn' data-value='"+item_group+"'>"+item_group+"</button>";
-      }).join("");
-      
+      let item_groups_html = sorted_item_groups.map(function(data) {
+      return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold; content: ''; width: 16px; height: 16px; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + ");' class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
+      }).join("");      
       this.search_item_group.find('.row').html(item_groups_html);
-
     }
   }
   erpnext.pos.PointOfSale = PointOfSale;
