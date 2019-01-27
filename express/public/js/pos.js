@@ -332,6 +332,7 @@ try {
     render_selected_item(){
       super.render_selected_item();
       $(".pos-selected-item-action> .pos-list-row").prepend('<button type="button" id="addons" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Modifier</button>');
+      
       $("#addons").click(function() {
         var remain = $("#remain").text();
         $(".numbers_dialog").each(function(i) {
@@ -343,6 +344,221 @@ try {
             }
         });
     });
+            
+    $.fn.numpad.defaults.gridTpl = `<table class="table modal-content"></table>`;
+    $.fn.numpad.defaults.backgroundTpl = `<div class="modal-backdrop in"></div>`;
+    $.fn.numpad.defaults.displayTpl = `<input type="text" class="form-control" />`;
+    $.fn.numpad.defaults.buttonNumberTpl =  `<button type="button" class="btn btn-default"></button>`;
+    $.fn.numpad.defaults.buttonFunctionTpl = `<button type="button" class="btn" style="width: 100%;"></button>`;
+    $.fn.numpad.defaults.onKeypadCreate = function(){$(this).find(".done").addClass("btn-primary");};
+    
+    $("#text-basic").numpad({
+        onKeypadOpen:function(){
+            var keypad = $(this);
+            keypad.find(".done").click(function(e){
+                var qty = keypad.find(".nmpd-display").val();
+                var remain = parseInt($("#remain").text()) - parseInt(qty);
+                var valueForSelectedItem = qty;
+                if (remain < 0) {
+                    frappe.msgprint("Quantity will be negative");
+                    $("#text-basic").val("#");
+
+                } else {
+                $("#remain").text(remain);
+                var addons = cur_pos.item_data.filter(obj => {
+                  return obj.item_group === "اضافات - Additions To The Sandwich"
+                });
+		
+                var result = "";
+                for (var addon in addons){
+                    result = result +
+                    `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+                    <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+                    type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+                };
+                var addons_template = ` <div class="modal-body">
+                <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
+                <h3 class="col-xs-10" data-value = ${valueForSelectedItem}>
+                Total Number of Items${valueForSelectedItem}
+                </h3>
+                <span style="margin-block-start: 2em;" class="col-xs-2 glyphicon glyphicon-chevron-up pointer" aria-hidden="true" data-toggle="collapse" data-target="#content"></span>
+                </a>
+                <div class="items-for-addons" data-group-qty=${valueForSelectedItem}>
+                    ${result}
+                </div>
+                </div>
+                `;
+                $("#new_nump_addons").prepend(addons_template);
+                $("#text-basic").val("#")                
+                }
+            });
+        }
+    });
+
+
+    $("#addons").click(function() {
+        var remain = $("#remain").text();
+        $(".numbers_dialog").each(function(i) {
+            if ($(this)[0].innerHTML > remain) {
+                $(this)[0].disabled = true;
+            	$(this).css("background-color", "red");
+            }else{
+            	$(this).css("background-color", "green");
+            }
+        });
+    });
+    var item_code = $("#new_nump_addons").attr("data-parent-item");
+    var addons = cur_pos.frm.doc.addons;
+    var call_api = false;
+    if (addons.length > 0) {
+        for (x in addons) {
+            if (addons[x].parent_item) {
+                if (item_code == addons[x].parent_item) {
+                    call_api = true;
+                };
+            };
+        };
+    };
+
+    if (call_api) {
+        var addons_template =cur_pos.get_rendered_addons(addons,item_code);        
+        $("#new_nump_addons").prepend(addons_template);
+        var total = 0;
+        $("#new_nump_addons").find("h3").each(function(i) {
+            total = total + parseInt($(this).attr("data-value"))
+        });
+        var remain = parseInt($("#remain").text()) - total;
+        $("#remain").text(remain);
+        $(".numbers_dialog").each(function(i) {
+            if ($(this)[0].innerHTML > remain) {
+                $(this)[0].disabled = true;
+            	$(this).css("background-color", "red");
+            }else{
+            	$(this).css("background-color", "green");
+            }
+        });
+
+    }
+
+    $(".numbers_dialog").click(function() {
+        var remain = parseInt($("#remain").text()) - parseInt(this.innerHTML);
+        var valueForSelectedItem = this.innerHTML;
+        if (remain < 0) {
+            frappe.msgprint("Quantity will be negative") 
+        } else {
+		$("#remain").text(remain);
+		var addons ;
+		var item_parent = $("#new_nump_addons").attr("data-parent-item");
+		var x_addons = cur_pos.addon_list.filter(obj => {
+			return obj.item_code === item_parent
+		  });
+		if(x_addons.length <= 0){
+			var y_addons = cur_pos.item_data.filter(obj => {
+				return obj.item_group === "اضافات - Additions To The Sandwich"
+			  });
+			addons = y_addons;
+		}else{
+        	console.log("x_addons",x_addons);
+			x_addons = x_addons.map(function (obj) {
+				return {
+					 name: obj.addon,
+					 addon_order: obj.addon_order
+				 };
+			 });
+			x_addons = x_addons.sort(function(a, b){
+				return a.addon_order-b.addon_order
+			});
+			addons = x_addons;
+		}
+
+        var result = "";
+        for (var addon in addons){
+            result = result +
+            `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+            <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+            type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+        };
+
+        var addons_template = ` <div class="modal-body">
+        <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
+        <h3 class="col-xs-10" data-value = ${valueForSelectedItem}>
+        Total Number of Items${valueForSelectedItem}
+        </h3>
+        <span style="margin-block-start: 2em;" class="col-xs-2 glyphicon glyphicon-chevron-up pointer" aria-hidden="true" data-toggle="collapse" data-target="#content"></span>
+        </a>
+        <div class="items-for-addons" data-group-qty=${valueForSelectedItem}>
+            ${result}
+        </div>
+        </div>
+        `;
+        $("#new_nump_addons").prepend(addons_template);
+
+        $(".numbers_dialog").each(function(i) {
+            if ($(this)[0].innerHTML > remain) {
+                $(this)[0].disabled = true;
+            	$(this).css("background-color", "red");
+            }else{
+            	$(this).css("background-color", "green");
+            }
+        });
+
+        }
+    });
+
+    $("#save_dialog").click(
+        function() {
+            var addons_list = [];
+            $(".items-for-addons").each(function(i) {
+                var addon = {};
+                addon["parent_qty"] = $(this).attr("data-group-qty");
+                addon["parent_item"] = $("#new_nump_addons").attr("data-parent-item");
+                $(this).each(function() {
+                    addon["addons"] = $(this).find("input:checked").map(function() {
+                        return { "addon": $(this).val(), "price": $(this).attr("data-price") }
+                    }).get();
+
+                });
+                addons_list.push(addon);
+            });
+
+        var remain = parseInt($("#remain").text());
+        if (remain > 0){
+         var addon = {};
+         addon["parent_qty"] = remain;
+         addon["parent_item"] = $("#new_nump_addons").attr("data-parent-item");
+         addon["addons"] = [{ "addon": "قياسي - Standard", "price": 0 }];
+         addons_list.push(addon);
+        }                      	
+    }
+        }                      	
+
+            final_array_items = [];
+            for (var i = 0; i < addons_list.length; i++) {
+                for (j in addons_list[i]["addons"]) {
+                    var addon_row = {
+                        "group_id": i,
+                        "addon": addons_list[i]["addons"][j]["addon"],
+                        "parent_qty": addons_list[i]["parent_qty"],
+                        "parent_item": addons_list[i]["parent_item"],
+                        "price": addons_list[i]["addons"][j]["price"]
+                    };
+                    final_array_items.push(addon_row)
+                };
+            };
+            var item_parent = $("#new_nump_addons").attr("data-parent-item");
+            for (var i = cur_pos.frm.doc.addons.length - 1; i >= 0; i--) {
+                if (cur_pos.frm.doc.addons[i].parent_item == item_parent) {
+                    cur_pos.frm.doc.addons.splice(i, 1);
+                };
+            };
+            cur_pos.frm.doc.addons.push(...final_array_items);
+
+            cur_pos.clear_selected_row();
+            cur_pos.rerender_pos_bill_item_new();
+
+        }
+    );
+
     }
   }
   erpnext.pos.PointOfSale = PointOfSale;
