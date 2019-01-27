@@ -635,4 +635,53 @@ try {
 
 } catch (e) {
   console.log("error", e);
+
+
+  var idx;
+ $(".item-cart-items").find(".pos-bill-item, .active").each(function(index,g) {
+    if($(g).hasClass( "active" )){
+      idx = g;
+    }    
+  });
+
+  var idx;
+  var cart_list = $(".item-cart-items").find(".pos-bill-item, .active");
+  for (let i = 0; i < cart_list.length; i++) {
+    const element = cart_list[i];
+    if($(cart_list[i]).hasClass( "active" )){
+      idx = g;
+    }     
+  }
+  console.log(idx);
+  
 }
+function dddd(g) {
+  console.log($(g).hasClass("active"));
+}
+
+function mapOrder (array, order, key) {
+  
+  array.sort( function (a, b) {
+    var A = a[key], B = b[key];
+    
+    if (order.indexOf(A) > order.indexOf(B)) {
+      return 1;
+    } else {
+      return -1;
+    }
+    
+  });
+  
+  return array;
+};
+
+
+/**
+ * Example:
+ */
+
+
+item_order = cur_pos.items_order.map(p=>p.item_code)
+
+ordered_array = mapOrder(cur_pos.items, item_order, 'name');
+console.log("ordered Array ", ordered_array);
