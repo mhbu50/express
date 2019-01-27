@@ -481,7 +481,7 @@ try {
             result = result +
             `<span class="button-checkbox">
             <button type="button" class="btn" data-color="primary">${addons[addon].name}</button>
-            <input type="checkbox"  value="${addons[addon].name} class="hidden" checked />
+            <input type="checkbox"  value="${addons[addon].name} class="hidden"/>
             </span>`
         };
 
