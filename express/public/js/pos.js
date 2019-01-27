@@ -320,6 +320,21 @@ try {
       });
       return list;
     }
+    make_search(){
+      super.make_search();
+      sorted_item_groups = this.get_sorted_item_groups()
+      let isFirst = true;
+      let item_groups_html = sorted_item_groups.map(function(item_group) {
+        if(isFirst){
+          isFirst = false;
+          return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;' class='btn item-active' data-value='"+item_group+"'>"+item_group+"</button>";
+        }else	
+          return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;' class='btn' data-value='"+item_group+"'>"+item_group+"</button>";
+      }).join("");
+      
+      this.search_item_group.find('.row').html(item_groups_html);
+
+    }
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
