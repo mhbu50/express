@@ -473,16 +473,16 @@ try {
 
         var result = "";
         for (var addon in addons){
-            // result = result +
-            // `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
-            // <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-            // type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
-
             result = result +
-            `<span class="button-checkbox">
-            <button type="button" class="btn" data-color="primary">${addons[addon].name}</button>
-            <input type="checkbox"  value="${addons[addon].name} class="hidden"/>
-            </span>`
+            `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+            <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+            type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+
+            // result = result +
+            // `<span class="button-checkbox">
+            // <button type="button" class="btn" data-color="primary">${addons[addon].name}</button>
+            // <input type="checkbox"  value="${addons[addon].name} class="hidden"/>
+            // </span>`
         };
 
         var addons_template = ` <div class="modal-body">
