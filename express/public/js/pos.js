@@ -332,6 +332,17 @@ try {
     render_selected_item(){
       super.render_selected_item();
       $(".pos-selected-item-action> .pos-list-row").prepend('<button type="button" id="addons" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Modifier</button>');
+      $("#addons").click(function() {
+        var remain = $("#remain").text();
+        $(".numbers_dialog").each(function(i) {
+            if ($(this)[0].innerHTML > remain) {
+                $(this)[0].disabled = true;
+            	$(this).css("background-color", "red");
+            }else{
+            	$(this).css("background-color", "green");
+            }
+        });
+    });
     }
   }
   erpnext.pos.PointOfSale = PointOfSale;
