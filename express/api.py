@@ -20,6 +20,12 @@ def get_addon_list():
 def get_items_order():
 	return frappe.db.sql(""" select item_code,pos_order_position from tabItem where pos_order_position != 0 order by pos_order_position ASC""", as_dict=1)
 
+def on_session_creation(login_manager):
+	info = frappe.db.get_value("User", frappe.local.session_obj.user,
+			["home_page_link"], as_dict=1)
+
+	frappe.local.response["home_page"] = info.home_page_link or "/desk#home-page"
+
 @frappe.whitelist()
 def get_addons():
 	addons = frappe.get_all('Addon', fields=['name', 'price'])

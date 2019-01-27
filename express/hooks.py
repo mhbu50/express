@@ -34,7 +34,7 @@ page_js = {"pos": "public/js/pos.js", "point-of-sale": "public/js/pos.js"}
 
 # Home Pages
 # ----------
-
+on_session_creation = "express.api.on_session_creation"
 # application home page (will override Website Settings)
 # home_page = "login"
 
