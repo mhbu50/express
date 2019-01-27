@@ -313,6 +313,13 @@ try {
       }
     }
 
+    get_sorted_item_groups(){
+      list = {}
+      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {       
+        list[i] = data.item_group;
+      });
+      return list;
+    }
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
