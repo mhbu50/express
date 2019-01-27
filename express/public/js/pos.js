@@ -507,6 +507,7 @@ try {
 
     $("#save_dialog").click(
         function() {
+          debugger;
             var addons_list = [];
             $(".items-for-addons").each(function(i) {
                 var addon = {};
