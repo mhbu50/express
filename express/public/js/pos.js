@@ -328,6 +328,11 @@ try {
       }).join("");      
       this.search_item_group.find('.row').html(item_groups_html);
     }
+
+    render_selected_item(){
+      super.render_selected_item();
+      $(".pos-selected-item-action> .pos-list-row").prepend('<button type="button" id="addons" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Modifier</button>');
+    }
   }
   erpnext.pos.PointOfSale = PointOfSale;
 
