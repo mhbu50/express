@@ -533,7 +533,7 @@ try {
 
             var final_array_items = [];
             for (var i = 0; i < addons_list.length; i++) {
-                for (j in addons_list[i]["addons"]) {
+                for (var j in addons_list[i]["addons"]) {
                     var addon_row = {
                         "group_id": i,
                         "addon": addons_list[i]["addons"][j]["addon"],
