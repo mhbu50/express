@@ -529,8 +529,6 @@ try {
          addon["addons"] = [{ "addon": "قياسي - Standard", "price": 0 }];
          addons_list.push(addon);
         }                      	
-    }
-        }                      	
 
             final_array_items = [];
             for (var i = 0; i < addons_list.length; i++) {
