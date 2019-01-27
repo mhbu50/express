@@ -473,16 +473,22 @@ try {
 
         var result = "";
         for (var addon in addons){
+            // result = result +
+            // `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
+            // <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+            // type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+
             result = result +
-            `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
-            <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-            type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+            `<span class="button-checkbox">
+            <button type="button" class="btn" data-color="primary">${addons[addon].name}</button>
+            <input type="checkbox"  value="${addons[addon].name} class="hidden" checked />
+            </span>`
         };
 
         var addons_template = ` <div class="modal-body">
         <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
         <h3 class="col-xs-10" data-value = ${valueForSelectedItem}>
-        Total Number of Items${valueForSelectedItem}
+        Total Number of Items ${valueForSelectedItem}
         </h3>
         <span style="margin-block-start: 2em;" class="col-xs-2 glyphicon glyphicon-chevron-up pointer" aria-hidden="true" data-toggle="collapse" data-target="#content"></span>
         </a>
@@ -492,6 +498,70 @@ try {
         </div>
         `;
         $("#new_nump_addons").prepend(addons_template);
+
+        $('.button-checkbox').each(function () {
+
+          // Settings
+          var $widget = $(this),
+              $button = $widget.find('button'),
+              $checkbox = $widget.find('input:checkbox'),
+              color = $button.data('color'),
+              settings = {
+                  on: {
+                      icon: 'glyphicon glyphicon-check'
+                  },
+                  off: {
+                      icon: 'glyphicon glyphicon-unchecked'
+                  }
+              };
+  
+          // Event Handlers
+          $button.on('click', function () {
+              $checkbox.prop('checked', !$checkbox.is(':checked'));
+              $checkbox.triggerHandler('change');
+              updateDisplay();
+          });
+          $checkbox.on('change', function () {
+              updateDisplay();
+          });
+  
+          // Actions
+          function updateDisplay() {
+              var isChecked = $checkbox.is(':checked');
+  
+              // Set the button's state
+              $button.data('state', (isChecked) ? "on" : "off");
+  
+              // Set the button's icon
+              $button.find('.state-icon')
+                  .removeClass()
+                  .addClass('state-icon ' + settings[$button.data('state')].icon);
+  
+              // Update the button's color
+              if (isChecked) {
+                  $button
+                      .removeClass('btn-default')
+                      .addClass('btn-' + color + ' active');
+              }
+              else {
+                  $button
+                      .removeClass('btn-' + color + ' active')
+                      .addClass('btn-default');
+              }
+          }
+  
+          // Initialization
+          function init() {
+  
+              updateDisplay();
+  
+              // Inject the icon if applicable
+              if ($button.find('.state-icon').length == 0) {
+                  $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
+              }
+          }
+          init();
+      });
 
         $(".numbers_dialog").each(function(i) {
             if ($(this)[0].innerHTML > remain) {
