@@ -337,6 +337,8 @@ try {
       this.search_item_group.find('.row').html(item_groups_html);
       var me = this;
       this.search_item_group.on('click', '.row button', function() {
+        console.log("on('click',");
+        
         me.selected_item_group = $(this).attr('data-value');	
         $('.row button').removeClass("item-active");
         $(this).addClass("item-active");
