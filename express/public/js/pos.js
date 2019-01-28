@@ -391,10 +391,12 @@ try {
 		
                 var result = "";
                 for (var addon in addons){
-                    result = result +
-                    `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
-                    <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-                    type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`
+                  result = result +
+                  `<label style='padding: 0px 40px 40px 30px;font-size: 18px;'>
+                    <input type='hidden' name='alarm' value='False'/>
+                    <input class='custom-checkbox-input' name='alarm' value='${addons[addon].name}' type='checkbox'>
+                    <span class='custom-checkbox-text'>${addons[addon].name}</span>
+                  </label>`;
                 };
                 var addons_template = ` <div class="modal-body">
                 <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
