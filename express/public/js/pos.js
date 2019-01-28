@@ -330,7 +330,7 @@ try {
         return `<button class='button' style='text-align: center; text-decoration: none; display: inline-block;
          font-weight: bold; margin: 4px 2px; cursor: pointer;'>
          <span style='background: url(${data.image}) no-repeat;float: left;
-          width: 20px; height: 20px; margin-right: 10px'></span>${data.item_group}</button>`
+          width: 32px; height: 32px; margin-right: 10px'></span>${data.item_group}</button>`
       
         // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
       }).join("");      
