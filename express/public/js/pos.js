@@ -324,7 +324,8 @@ try {
     }
     make_search(){
       super.make_search();
-      sorted_item_groups = this.get_sorted_item_groups()
+      sorted_item_groups = this.get_sorted_item_groups();
+      this.sorted_item_groups = sorted_item_groups;
       let item_groups_html = sorted_item_groups.map(function(data) {
       
         return `<button class='button' style='text-align: center; text-decoration: none; display: inline-block;
