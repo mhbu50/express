@@ -327,8 +327,12 @@ try {
       sorted_item_groups = this.get_sorted_item_groups()
       let item_groups_html = sorted_item_groups.map(function(data) {
       
-        
-      return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
+        return `<button class='button' style='text-align: center; text-decoration: none; display: inline-block;
+         font-weight: bold; margin: 4px 2px; cursor: pointer;'>
+         <span style='background: url(${data.image}) no-repeat;float: left;
+          width: 20px; height: 20px; margin-right: 10px'></span>${data.item_group}</button>`
+      
+        // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
       }).join("");      
       this.search_item_group.find('.row').html(item_groups_html);
     }
@@ -383,7 +387,7 @@ try {
                 var addons_template = ` <div class="modal-body">
                 <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
                 <h3 class="col-xs-10" data-value = ${valueForSelectedItem}>
-                Total Number of Items${valueForSelectedItem}
+                Total Number of Items ${valueForSelectedItem}
                 </h3>
                 <span style="margin-block-start: 2em;" class="col-xs-2 glyphicon glyphicon-chevron-up pointer" aria-hidden="true" data-toggle="collapse" data-target="#content"></span>
                 </a>
@@ -641,43 +645,43 @@ try {
   console.log("error", e);
 
 
-  var idx;
- $(".item-cart-items").find(".pos-bill-item, .active").each(function(index,g) {
-    if($(g).hasClass( "active" )){
-      idx = g;
-    }    
-  });
+//   var idx;
+//  $(".item-cart-items").find(".pos-bill-item, .active").each(function(index,g) {
+//     if($(g).hasClass( "active" )){
+//       idx = g;
+//     }    
+//   });
 
-  var idx;
-  var cart_list = $(".item-cart-items").find(".pos-bill-item, .active");
-  for (let i = 0; i < cart_list.length; i++) {
-    const element = cart_list[i];
-    if($(cart_list[i]).hasClass( "active" )){
-      idx = g;
-    }     
-  }
-  console.log(idx);
+//   var idx;
+//   var cart_list = $(".item-cart-items").find(".pos-bill-item, .active");
+//   for (let i = 0; i < cart_list.length; i++) {
+//     const element = cart_list[i];
+//     if($(cart_list[i]).hasClass( "active" )){
+//       idx = g;
+//     }     
+//   }
+//   console.log(idx);
   
 }
-function dddd(g) {
-  console.log($(g).hasClass("active"));
-}
+// function dddd(g) {
+//   console.log($(g).hasClass("active"));
+// }
 
-function mapOrder (array, order, key) {
+// function mapOrder (array, order, key) {
   
-  array.sort( function (a, b) {
-    var A = a[key], B = b[key];
+//   array.sort( function (a, b) {
+//     var A = a[key], B = b[key];
     
-    if (order.indexOf(A) > order.indexOf(B)) {
-      return 1;
-    } else {
-      return -1;
-    }
+//     if (order.indexOf(A) > order.indexOf(B)) {
+//       return 1;
+//     } else {
+//       return -1;
+//     }
     
-  });
+//   });
   
-  return array;
-};
+//   return array;
+// };
 
 
 /**
@@ -685,7 +689,7 @@ function mapOrder (array, order, key) {
  */
 
 
-item_order = cur_pos.items_order.map(p=>p.item_code)
+// item_order = cur_pos.items_order.map(p=>p.item_code)
 
-ordered_array = mapOrder(cur_pos.items, item_order, 'name');
-console.log("ordered Array ", ordered_array);
+// ordered_array = mapOrder(cur_pos.items, item_order, 'name');
+// console.log("ordered Array ", ordered_array);
