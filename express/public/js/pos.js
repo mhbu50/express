@@ -315,7 +315,9 @@ try {
 
     get_sorted_item_groups(){
       let list = [];
-      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {       
+      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {   
+        console.log("1data",data);
+            
         list[i] = { "item_group":data.item_group,"image":data.image};
       });
       return list;
@@ -324,9 +326,9 @@ try {
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups()
       let item_groups_html = sorted_item_groups.map(function(data) {
-        console.log("data",data);
+      
         
-      return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; width: 32px; height: 32px; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
+      return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
       }).join("");      
       this.search_item_group.find('.row').html(item_groups_html);
     }
