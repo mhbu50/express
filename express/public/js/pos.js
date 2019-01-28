@@ -325,10 +325,9 @@ try {
     make_search(){
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups();
-      this.sorted_item_groups = sorted_item_groups;
       let item_groups_html = sorted_item_groups.map(function(data) {
       
-        return `<button class='button' style='text-align: center; text-decoration: none; display: inline-block;
+        return `<button class='button' data-value= '${data.item_group}' style='text-align: center; text-decoration: none; display: inline-block;
          font-weight: bold; margin: 4px 2px; cursor: pointer;'>
          <span style='background: url(${data.image}) no-repeat;float: left;
           width: 32px; height: 32px; margin-right: 10px'></span>${data.item_group}</button>`
