@@ -494,7 +494,7 @@ try {
         var result = "";
         for (var addon in addons){
             result = result +
-            `<label class='custom-checkbox' style='padding: 0px 40px 40px 30px;font-size: 18px;'>
+            `<label style='padding: 0px 40px 40px 30px;font-size: 18px;'>
               <input type='hidden' name='alarm' value='False'/>
               <input class='custom-checkbox-input' name='alarm' value=${addons[addon].name} type='checkbox'>
               <span class='custom-checkbox-text'>${addons[addon].name}</span>
