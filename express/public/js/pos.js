@@ -496,7 +496,7 @@ try {
             result = result +
             `<label style='padding: 0px 40px 40px 30px;font-size: 18px;'>
               <input type='hidden' name='alarm' value='False'/>
-              <input class='addons_add' name='alarm' value=${addons[addon].name} type='checkbox'>
+              <input class='custom-checkbox-input' name='alarm' value='${addons[addon].name}' type='checkbox'>
               <span class='custom-checkbox-text'>${addons[addon].name}</span>
             </label>`;
 
