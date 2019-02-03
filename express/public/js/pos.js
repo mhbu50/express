@@ -351,7 +351,7 @@ try {
 
     render_selected_item(){
       super.render_selected_item();
-      $(".pos-selected-item-action> .pos-list-row").prepend('<button type="button" id="addons" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Modifier</button>');
+      $(".pos-selected-item-action").prepend('<button type="button" id="addons" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Modifier</button>');
       
       $("#addons").click(function() {
         var remain = $("#remain").text();
