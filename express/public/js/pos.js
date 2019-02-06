@@ -332,7 +332,8 @@ try {
       
         // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";      
       }).join("");      
-      this.search_item_group.find('.row').html(item_groups_html);
+      //this.search_item_group.find('.row').html(item_groups_html); 
+	this.search_item_group.parent().html(item_groups_html);
       var me = this;
       this.search_item_group.on('click', '.row button', function() {
         console.log("on('click',");
