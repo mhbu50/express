@@ -335,7 +335,8 @@ try {
       //this.search_item_group.find('.row').html(item_groups_html); 
 	this.search_item_group.parent().html(item_groups_html);
       var me = this;
-      this.search_item_group.on('click', '.row button', function() {
+      //this.search_item_group.on('click', '.row button', function() {
+	$(".pos-bill-header").on('click', 'button', function() {
         console.log("on('click',");
         
         me.selected_item_group = $(this).attr('data-value');	
