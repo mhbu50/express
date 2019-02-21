@@ -9,6 +9,7 @@ frappe.ui.form.on('Item', {
      }	 
   },
   add_from:function(frm){
+        if(frm.doc.add_from != undefined || frm.doc.add_from != null){
         frappe.model.with_doc("Item", frm.doc.add_from, function() {
                 var item= frappe.model.get_doc("Item", frm.doc.add_from);
                 $.each(item.addon, function(index, row){
@@ -18,5 +19,6 @@ frappe.ui.form.on('Item', {
                     frm.refresh_field("addon");
                 });
             });
+        }
   }
 });
