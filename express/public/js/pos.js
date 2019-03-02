@@ -101,6 +101,9 @@ try {
                 a.push(arr[i][feild]);
         return a;
         }
+        if(this.frm.doc.is_return && this.frm.doc.is_return == 1 ){
+          return;
+        }
       debugger;
       var me = this;
       var receipt = "";
