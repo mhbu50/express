@@ -43,8 +43,6 @@ try {
 	class PointOfSale extends erpnext.pos.PointOfSale {
     //for online moode
     submit_sales_invoice() {
-      console.log("submit for online moode");
-      console.log("this.frm.selected_doc.pos_profile = ", this.frm.selected_doc.pos_profile);
       var me = this;
       send_kds(me.frm.selected_doc, me.frm.selected_doc.pos_profile)
       super.submit_sales_invoice();
@@ -54,7 +52,7 @@ try {
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
-	    var html = frappe.render(me.print_template_data, me.frm.doc);
+      var html = frappe.render(me.print_template_data, me.frm.doc);
       if(cur_pos.pos_profile_data.print_after_submit){
         me.print_document(html);
         me.send_to_printers();
@@ -303,17 +301,16 @@ try {
       if(localStorage.getItem("items_order") !== "undefined"){
       this.items_order =  JSON.parse(localStorage.getItem("items_order"));
       }
-    }
 
-    add_to_cart(){
-      super.add_to_cart();
-      if(cur_pos.frm.doc.addons.length >0 &&
-        cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0].name && p.addon == "قياسي - Standard") > 0){
-      var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == this.items[0].name && p.addon == "قياسي - Standard");
-      console.log("addon_item_index",addon_item_index);
-      cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) +1;
-      cur_pos.rerender_pos_bill_item_new();
-      }
+      $(cur_pos.wrapper).on("click", ".pos-item-wrapper", function () {
+          if(cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0 &&
+            cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard") > 0){
+          var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard");
+          console.log("addon_item_index",addon_item_index);
+          cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) +1;
+          cur_pos.rerender_pos_bill_item_new();
+          }
+      });
     }
 
     get_sorted_item_groups(){
@@ -340,7 +337,7 @@ try {
       var me = this;
       //this.search_item_group.on('click', '.row button', function() {
 	$(".pos-bill-header").on('click', 'button', function() {
-        console.log("on('click',");
+        console.log("on('click')");
 
         me.selected_item_group = $(this).attr('data-value');
         $('.row button').removeClass("item-active");
@@ -413,7 +410,7 @@ try {
                 </div>
                 `;
                 $("#new_nump_addons").prepend(addons_template);
-                $("#text-basic").val("#")
+                $("#text-basic").val("#");
                 }
             });
         }
@@ -449,7 +446,7 @@ try {
         $("#new_nump_addons").prepend(addons_template);
         var total = 0;
         $("#new_nump_addons").find("h3").each(function(i) {
-            total = total + parseInt($(this).attr("data-value"))
+            total = total + parseInt($(this).attr("data-value"));
         });
         var remain = parseInt($("#remain").text()) - total;
         $("#remain").text(remain);
@@ -468,7 +465,7 @@ try {
         var remain = parseInt($("#remain").text()) - parseInt(this.innerHTML);
         var valueForSelectedItem = this.innerHTML;
         if (remain < 0) {
-            frappe.msgprint("Quantity will be negative")
+            frappe.msgprint(__("Quantity will be negative"));
         } else {
 		$("#remain").text(remain);
 		var addons ;
@@ -596,9 +593,9 @@ try {
         $(".numbers_dialog").each(function(i) {
             if ($(this)[0].innerHTML > remain) {
                 $(this)[0].disabled = true;
-            	$(this).css("background-color", "red");
+                $(this).css("background-color", "red");
             }else{
-            	$(this).css("background-color", "green");
+                $(this).css("background-color", "green");
             }
         });
 
