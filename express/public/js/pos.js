@@ -99,7 +99,7 @@ try {
     }
 
     onload(){
-      super.onload();      
+      super.onload();
       this.webprint = new WebPrint(true, {
         relayHost: "127.0.0.1",
         relayPort: "8081"
@@ -112,9 +112,6 @@ try {
           console.log("get_data_from_server");
           var addon_list = r.message;
           console.log("r.message",r.message);
-          
-          console.log("this",me);
-
           localStorage.setItem('addon_list', JSON.stringify(addon_list));
           me.addon_list = addon_list;
         }
@@ -216,7 +213,7 @@ try {
           });
         });
         send_to_printer(ip,receipt);
-        console.log("receipt",receipt);                
+        console.log("receipt",receipt);
         cur_pos.webprint.printHtml(receipt, "PDF");
       });
       //send complete order to order receipt printer
@@ -299,22 +296,15 @@ try {
       });
     }
 
-    get_sorted_item_groups(){
-      let list = [];
-      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {
-        list[i] = { "item_group":data.item_group,"image":data.image};
-      });
-      return list;
-    }
     make_search(){
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups();
       let item_groups_html = sorted_item_groups.map(function(data) {
 
-        return `<button class='button' data-value= '${data.item_group}' style='text-align: center; text-decoration: none; display: inline-block;
+        return `<button class='button' data-value= '${data}' style='text-align: center; text-decoration: none; display: inline-block;
          font-weight: bold; margin: 4px 2px; cursor: pointer;'>
          <span style='background: url(${data.image}) no-repeat;float: left;
-          width: 32px; height: 32px; margin-right: 10px'></span>${data.item_group}</button>`
+          width: 32px; height: 32px; margin-right: 10px'></span>${data}</button>`
 
         // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";
       }).join("");
