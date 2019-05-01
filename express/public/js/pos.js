@@ -25,30 +25,8 @@ setTimeout(function() {
 try {
   erpnext.pos.PointOfSale = erpnext.pos.PointOfSale.extend({});
 
-
-  function send_kds(cart, pos_profile) {
-    //get cart items
-    frappe.call({
-      method: 'express.api.send_cart_kds',
-      args: {
-        "cart": cart,
-        // "pos_profile": me.frm.selected_doc.pos_profile
-      },
-      callback: function(r) {
-        log("bb");
-      }
-    });
-  }
-
 	class PointOfSale extends erpnext.pos.PointOfSale {
-    //for online moode
-    submit_sales_invoice() {
-      var me = this;
-      send_kds(me.frm.selected_doc, me.frm.selected_doc.pos_profile)
-      super.submit_sales_invoice();
-    }
-
-    //for offline model
+     //for offline model
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
@@ -91,6 +69,57 @@ try {
       window.frames['myiframe'].print();
 
       setTimeout(() => { $(".printFrame").remove(); }, 1000)
+    }
+
+    create_new(){
+      super.create_new();
+      try {
+        var str_order = localStorage.getItem("order");
+        var date = localStorage.getItem("date");
+        //get a numeric value from str_order, put it in order
+        if ((str_order == null || str_order == "null") ||
+        (date == null || date != moment().format('MM D, YYYY')) ){
+          var order = 0;
+          var date = moment().format('MM D, YYYY');
+        } else {
+          order = parseInt(str_order);
+        }
+        //increment order
+        order++;
+        this.frm.doc.order = order;
+        this.frm.doc.phone = cur_pos.pos_profile_data.phone;
+        //store values
+        localStorage.setItem("order", order);
+        localStorage.setItem("date", date);
+      } catch (e) {
+        console.log("e",e);
+
+        frappe.throw(__("LocalStorage is full , did not save order or date"))
+      }
+    }
+
+    onload(){
+      super.onload();
+      this.webprint = new WebPrint(true, {
+        relayHost: "127.0.0.1",
+        relayPort: "8081"
+       });
+      var me = this;
+      frappe.call({
+        method: "express.api.get_addon_list",
+        freeze: true,
+        callback: function (r) {
+          console.log("get_data_from_server");
+          var addon_list = r.message;
+          console.log("r.message",r.message);
+          localStorage.setItem('addon_list', JSON.stringify(addon_list));
+          me.addon_list = addon_list;
+        }
+      });
+      console.log("onload this",this);
+      if(localStorage.getItem("addon_list") !== "undefined"){
+      this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
+      }
     }
 
     send_to_printers(){
@@ -184,6 +213,8 @@ try {
           });
         });
         send_to_printer(ip,receipt);
+        console.log("receipt",receipt);
+        cur_pos.webprint.printHtml(receipt, "PDF");
       });
       //send complete order to order receipt printer
       if(cur_pos.pos_profile_data.printer_ip){
@@ -234,54 +265,6 @@ try {
       }
     }
 
-    create_new(){
-      super.create_new();
-      try {
-        var str_order = localStorage.getItem("order");
-        var date = localStorage.getItem("date");
-        //get a numeric value from str_order, put it in order
-        if ((str_order == null || str_order == "null") ||
-        (date == null || date != moment().format('MM D, YYYY')) ){
-          var order = 0;
-          var date = moment().format('MM D, YYYY');
-        } else {
-          order = parseInt(str_order);
-        }
-        //increment order
-        order++;
-        this.frm.doc.order = order;
-        this.frm.doc.phone = cur_pos.pos_profile_data.phone;
-        //store values
-        localStorage.setItem("order", order);
-        localStorage.setItem("date", date);
-      } catch (e) {
-        console.log("e",e);
-
-        frappe.throw(__("LocalStorage is full , did not save order or date"))
-      }
-    }
-
-    onload(){
-      super.onload();
-      var me = this;
-      frappe.call({
-        method: "express.api.get_addon_list",
-        freeze: true,
-        callback: function (r) {
-          console.log("get_data_from_server");
-          var addon_list = r.message;
-          console.log("addon_list",addon_list);
-
-          localStorage.setItem('addon_list', JSON.stringify(addon_list));
-          me.addon_list = addon_list;
-        }
-      });
-      console.log("onload this",this);
-      if(localStorage.getItem("addon_list") !== "undefined"){
-      this.addon_list =  JSON.parse(localStorage.getItem("addon_list"));
-      }
-    }
-
     make_control (){
       super.make_control();
       console.log("make_control this");
@@ -313,22 +296,15 @@ try {
       });
     }
 
-    get_sorted_item_groups(){
-      let list = [];
-      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {
-        list[i] = { "item_group":data.item_group,"image":data.image};
-      });
-      return list;
-    }
     make_search(){
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups();
       let item_groups_html = sorted_item_groups.map(function(data) {
 
-        return `<button class='button' data-value= '${data.item_group}' style='text-align: center; text-decoration: none; display: inline-block;
+        return `<button class='button' data-value= '${data}' style='text-align: center; text-decoration: none; display: inline-block;
          font-weight: bold; margin: 4px 2px; cursor: pointer;'>
          <span style='background: url(${data.image}) no-repeat;float: left;
-          width: 32px; height: 32px; margin-right: 10px'></span>${data.item_group}</button>`
+          width: 32px; height: 32px; margin-right: 10px'></span>${data}</button>`
 
         // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";
       }).join("");
