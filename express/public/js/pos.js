@@ -171,8 +171,7 @@ try {
         order_receipt_table += "</table></body></html>";
       //send complete order to order receipt printer
       if(cur_pos.pos_profile_data.collection_orders_printer){
-        console.log("order_receipt",order_receipt);
-        this.print_document(order_receipt,cur_pos.pos_profile_data.collection_orders_printer);
+        this.print_document(order_receipt_table,cur_pos.pos_profile_data.collection_orders_printer);
       }
       console.log("to_print",to_print);
     }
