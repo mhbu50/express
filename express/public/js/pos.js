@@ -125,9 +125,8 @@ try {
       }
 
       var me = this;
-      var receipt = "\n\n\n\nOrder:#" + me.frm.doc.order + "\n";
-      var receipt_html = "<html><body><table border='1'><tr><td colspan='2'>Order:#" + me.frm.doc.order + "</td></tr>";
-      var order_receipt = "\nCollection Order\n\n Order:#" + me.frm.doc.order + "\n";
+      var receipt_html = "";
+      var order_html = "<html><body><table border='1'><tr><td colspan='2'>Order:#" + me.frm.doc.order + "</td></tr>";
       var order_receipt_table = "<html><body><table border='1'><tr><td colspan='2'>Collection Order</td></tr>";
       order_receipt_table += "<tr><td colspan='2'>Order:#" + me.frm.doc.order + "</td></tr>";
 
@@ -138,7 +137,7 @@ try {
       }
       //loop items_cart
       $.each(cur_pos.frm.doc.items, function(index,ic) {
-        debugger;
+        //debugger;
         //filter addons_table by item
         var item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
         return n.parent_item == ic.item_code;
@@ -148,12 +147,35 @@ try {
       });
 
       //loop to send to_print to printers
-      //cur_pos.webprint.printHtml(order_receipt_table, "PDF");      
+      for (printer in to_print) {
+        receipt_html = "";
+        receipt_html = order_html;
+        console.log("printer",printer);
+        let item_list = to_print[printer];
+        item_list.forEach(function(i) {
+          receipt_html += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
+          order_receipt_table += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
+          let addons = i.addons;
+          let unique_gruop = uniques(addons,"group_id");
+          unique_gruop.forEach(function(ug){
+            var by_group = addons.filter(function(value){
+              return value.group_id == g;
+                });
+            receipt_html += "<tr><td>" + by_group.addon + "</td> <td> "+ by_group.parent_qty+"</td></tr>";
+          })
+      });
+      receipt_html += "</table></body></html>";
+
+      this.print_document(order_receipt_table, printer);
+      //console.log("html",receipt_html);
+      }
+        order_receipt_table += "</table></body></html>";
+
 
       //send complete order to order receipt printer
       if(cur_pos.pos_profile_data.collection_orders_printer){
         console.log("order_receipt",order_receipt);
-        cur_pos.webprint.printHtml(order_receipt,cur_pos.pos_profile_data.collection_orders_printer);
+        this.print_document(order_receipt,cur_pos.pos_profile_data.collection_orders_printer);
       }
       console.log("to_print",to_print);
     }
