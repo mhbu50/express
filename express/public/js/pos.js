@@ -152,6 +152,9 @@ try {
         receipt_html = order_html;
         console.log("printer",printer);
         let item_list = to_print[printer];
+        if(item_list.length == 0){
+          continue;
+        }
         item_list.forEach(function(i) {
           receipt_html += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
           order_receipt_table += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
