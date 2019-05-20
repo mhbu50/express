@@ -165,13 +165,10 @@ try {
           })
       });
       receipt_html += "</table></body></html>";
-
-      this.print_document(order_receipt_table, printer);
       //console.log("html",receipt_html);
+      this.print_document(receipt_html,printer);
       }
         order_receipt_table += "</table></body></html>";
-
-
       //send complete order to order receipt printer
       if(cur_pos.pos_profile_data.collection_orders_printer){
         console.log("order_receipt",order_receipt);
