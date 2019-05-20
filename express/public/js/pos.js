@@ -22,7 +22,7 @@ try {
     //for offline model
     print_document(html,printer){
       console.log("html",html);
-     printer = "PDF";//for test
+    //  printer = "PDF";//for test
      cur_pos.webprint.printHtml(html,printer);
     }
 
