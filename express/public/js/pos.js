@@ -26,7 +26,8 @@ try {
      cur_pos.webprint.printHtml(html,printer);
     }
 
-    print_cashier(html) {
+    print_cashier() {
+      var html = frappe.render_template("pos_invoice", this.frm.doc);
       var invoice_copy = 1;
       if(cur_pos.pos_profile_data.invoice_copy && cur_pos.pos_profile_data.invoice_copy > 1){
         invoice_copy = cur_pos.pos_profile_data.invoice_copy;
@@ -38,12 +39,10 @@ try {
 
     print_dialog() {
       console.log("print_dialog offline moode");
-      var me = this;
-      var html = frappe.render(me.print_template_data, me.frm.doc);
       if(cur_pos.pos_profile_data.print_after_submit){
-        me.print_cashier(html);
-        me.send_to_printers();
-        me.make_new_cart();
+        this.print_cashier();
+        this.send_to_printers();
+        this.make_new_cart();
         return;
       }
 
