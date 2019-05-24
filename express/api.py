@@ -4,8 +4,8 @@ import frappe
 
 @frappe.whitelist()
 def get_addon_list():
-	return frappe.db.sql(""" select item as 'addon',parent as 'item_code',addon_order from tabAddon where parent is not null
-	ORDER BY addon_order ASC""", as_dict=1),50
+	return frappe.db.sql(""" select distinct item as 'addon',parent as 'item_code',addon_order from tabAddon where parent is not null
+	ORDER BY addon_order ASC""", as_dict=1)
 
 @frappe.whitelist()
 def get_items_order_and_printers(p_restaurant_menu=None):
