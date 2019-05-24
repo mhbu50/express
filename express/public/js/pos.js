@@ -88,13 +88,53 @@ try {
       }
     }
 
-    mandatory_batch_no(){
-      //workaround to make it work while add addons
+    create_invoice() {
+      var invoice_data = {};		
+        // new code add all addons as standalone items
+      if (cur_pos.frm.doc.addons != null){ 
+          var addons = cur_pos.frm.doc.addons;
+          var item_dict = {};
+          for (var i = addons.length - 1; i >= 0; i--) {
+            if(addons[i]["addon"] in item_dict){
+              item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]) + parseInt(item_dict[addons[i]["addon"]]);
+            }else{
+              item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]);
+            }
+            this.item_data.push({"item_code":addons[i]["addon"]});
+          }
+      
+          for (var i in item_dict) {
+            cur_pos.items = cur_pos.get_items(i);
+            cur_pos.add_to_cart();
+            cur_pos.set_item_details(i, "qty", item_dict[i]);
+            cur_pos.set_item_details(i, "rate", cur_pos.price_list_data[i]);      
+            cur_pos.update_value();
+            }
+          }
+   
+      this.si_docs = this.get_doc_from_localstorage();
+      if (this.frm.doc.offline_pos_name) {
+        this.update_invoice();
+      } else {
+        this.frm.doc.offline_pos_name = $.now();
+        this.frm.doc.posting_date = frappe.datetime.get_today();
+        this.frm.doc.posting_time = frappe.datetime.now_time();
+        this.frm.doc.pos_profile = this.pos_profile_data['name'];
+        invoice_data[this.frm.doc.offline_pos_name] = this.frm.doc;
+        this.si_docs.push(invoice_data);
+        this.update_localstorage();
+        this.set_primary_action();
+      }
+      return invoice_data;
     }
 
-    validate_serial_no(){
+    // mandatory_batch_no(){
       //workaround to make it work while add addons
-    }
+    // }
+
+    // validate_serial_no(){
+      //workaround to make it work while add addons
+    // }
 
     onload(){
       super.onload();      
