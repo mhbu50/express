@@ -92,6 +92,10 @@ try {
       //workaround to make it work while add addons
     }
 
+    validate_serial_no(){
+      //workaround to make it work while add addons
+    }
+
     onload(){
       super.onload();      
       var me = this;
