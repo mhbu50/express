@@ -88,6 +88,10 @@ try {
       }
     }
 
+    mandatory_batch_no(){
+      //workaround to make it work while add addons
+    }
+
     onload(){
       super.onload();      
       var me = this;
@@ -216,7 +220,6 @@ try {
           });
           if (filtered_addon_by_parent.length > 0) {
             var max_item_group = 0;
-            var group_id = 0;
             max_item_group = parseInt(Math.max.apply(Math, filtered_addon_by_parent.map(function (o) { return o.group_id; }))) + 2;
             cur_pos.frm.doc.addons.push({ "group_id": max_item_group, "addon": "قياسي - Standard", "parent_qty": 1, "parent_item": cur_pos.items[0].name });
             cur_pos.rerender_pos_bill_item_new();
@@ -236,7 +239,6 @@ try {
 
     add_new_item_to_grid() {
       super.add_new_item_to_grid();
-  		var me = this;
   		this.child.printer = this.items[0].printer;
   	}
 
@@ -578,7 +580,6 @@ try {
 
     rerender_pos_bill_item_new(){
       var addons = cur_pos.frm.doc.addons;
-      var array_addons_for_display = [];
       var $items = this.wrapper.find(".items").empty();
 
       var groupBy = function(xs, key) { return xs.reduce(function(rv, x) { (rv[x[key]] = rv[x[key]] || []).push(x); return rv; }, {}); };
@@ -657,7 +658,6 @@ try {
       if(addons.length >0){
         var data = addons;
         var parent_template = "";
-        var result = "";
         var cleand_addon = [];
         var addons_list = cur_pos.item_data.filter(obj => {
           return obj.item_group === "اضافات - Additions To The Sandwich"
