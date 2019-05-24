@@ -169,9 +169,9 @@ try {
 
       var me = this;
       var receipt_html = "";
-      var order_html = "<html><body><table border='1'><tr><td colspan='2'>Order:#" + me.frm.doc.order + "</td></tr>";
-      var order_receipt_table = "<html><body><table border='1'><tr><td colspan='2'>Collection Order</td></tr>";
-      order_receipt_table += "<tr><td colspan='2'>Order:#" + me.frm.doc.order + "</td></tr>";
+      var order_html = "<html><body><table border='1'><tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
+      var order_receipt_table = "<html><body><table border='1'><tr><th colspan='2'>Collection Order</th></tr>";
+      order_receipt_table += "<tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
 
       let to_print={};
 
@@ -209,7 +209,7 @@ try {
                 });
                 for (let b = 0; b < by_group_list.length; b++) {
                   const element = by_group_list[b];
-                  receipt_html += "<tr><td>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
+                  receipt_html += "<tr><td  style='padding-left: 2em;'>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
                 }
            
           })
@@ -574,7 +574,7 @@ try {
 
     $("#save_dialog").click(
         function() {
-          debugger;
+          // debugger;
             var addons_list = [];
             $(".items-for-addons").each(function(i) {
                 var addon = {};
