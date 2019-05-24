@@ -91,26 +91,26 @@ try {
     create_invoice() {
       var invoice_data = {};		
         // new code add all addons as standalone items
-      if (cur_pos.frm.doc.addons != null){ 
-          var addons = cur_pos.frm.doc.addons;
-          var item_dict = {};
-          for (var i = addons.length - 1; i >= 0; i--) {
-            if(addons[i]["addon"] in item_dict){
-              item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]) + parseInt(item_dict[addons[i]["addon"]]);
-            }else{
-              item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]);
-            }
-            this.item_data.push({"item_code":addons[i]["addon"]});
-          }
+      // if (cur_pos.frm.doc.addons != null){ 
+      //     var addons = cur_pos.frm.doc.addons;
+      //     var item_dict = {};
+      //     for (var i = addons.length - 1; i >= 0; i--) {
+      //       if(addons[i]["addon"] in item_dict){
+      //         item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]) + parseInt(item_dict[addons[i]["addon"]]);
+      //       }else{
+      //         item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]);
+      //       }
+      //       this.item_data.push({"item_code":addons[i]["addon"]});
+      //     }
       
-          for (var i in item_dict) {
-            cur_pos.items = cur_pos.get_items(i);
-            cur_pos.add_to_cart();
-            cur_pos.set_item_details(i, "qty", item_dict[i]);
-            cur_pos.set_item_details(i, "rate", cur_pos.price_list_data[i]);      
-            cur_pos.update_value();
-            }
-          }
+      //     for (var i in item_dict) {
+      //       cur_pos.items = cur_pos.get_items(i);
+      //       cur_pos.add_to_cart();
+      //       cur_pos.set_item_details(i, "qty", item_dict[i]);
+      //       cur_pos.set_item_details(i, "rate", cur_pos.price_list_data[i]);      
+      //       cur_pos.update_value();
+      //       }
+      //     }
    
       this.si_docs = this.get_doc_from_localstorage();
       if (this.frm.doc.offline_pos_name) {
