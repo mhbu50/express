@@ -186,7 +186,7 @@ try {
         return n.parent_item == ic.item_code;
         });
 
-        to_print[ic.printer].push({"item_code":ic.item_code,"qty":ic.qty,"addons":item_addons});
+        to_print[ic.printer].push({"item_code":ic.item_code,"item_name":ic.item_name,"qty":ic.qty,"addons":item_addons});
       });
 
       //loop to send to_print to printers
@@ -199,8 +199,8 @@ try {
           continue;
         }
         item_list.forEach(function(i) {
-          receipt_html += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
-          order_receipt_table += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
+          receipt_html += "<tr><td>" + i.item_name + "</td> <td> "+ i.qty+"</td></tr>";
+          order_receipt_table += "<tr><td>" + i.item_name + "</td> <td> "+ i.qty+"</td></tr>";
           let addons = i.addons;
           let unique_gruop = uniques(addons,"group_id");
           unique_gruop.forEach(function(g){
