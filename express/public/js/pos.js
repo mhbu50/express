@@ -204,10 +204,14 @@ try {
           let addons = i.addons;
           let unique_gruop = uniques(addons,"group_id");
           unique_gruop.forEach(function(g){
-            var by_group = addons.filter(function(value){
+            var by_group_list = addons.filter(function(value){
               return value.group_id == g;
                 });
-            receipt_html += "<tr><td>" + by_group.addon + "</td> <td> "+ by_group.parent_qty+"</td></tr>";
+                for (let b = 0; b < by_group_list.length; b++) {
+                  const element = by_group_list[b];
+                  receipt_html += "<tr><td>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
+                }
+           
           })
       });
       receipt_html += "</table></body></html>";
