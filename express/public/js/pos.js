@@ -89,11 +89,7 @@ try {
     }
 
     onload(){
-      super.onload();
-      this.webprint = new WebPrint(true, {
-        relayHost: "127.0.0.1",
-        relayPort: "8080"
-       });
+      super.onload();      
       var me = this;
       console.log("me",me);
       frappe.call({
@@ -181,6 +177,10 @@ try {
     make_control (){
       super.make_control();
       console.log("make_control this");
+      this.webprint = new WebPrint(true, {
+        relayHost: cur_pos.pos_profile_data.address,
+        relayPort: cur_pos.pos_profile_data.port
+       });
       var me = this;
       console.log("me.pos_profile_data.restaurant_menu",me.pos_profile_data.restaurant_menu);
       frappe.call({
