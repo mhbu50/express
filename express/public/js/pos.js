@@ -160,7 +160,7 @@ try {
           order_receipt_table += "<tr><td>" + i.item_code + "</td> <td> "+ i.qty+"</td></tr>";
           let addons = i.addons;
           let unique_gruop = uniques(addons,"group_id");
-          unique_gruop.forEach(function(ug){
+          unique_gruop.forEach(function(g){
             var by_group = addons.filter(function(value){
               return value.group_id == g;
                 });
@@ -203,14 +203,26 @@ try {
       this.items_order =  JSON.parse(localStorage.getItem("items_order"));
       }
 
-      $(me.wrapper).on("click", ".pos-item-wrapper", function () {
-          if(cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0 &&
-            cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard") > 0){
+      $(cur_pos.wrapper).on("click", ".pos-item-wrapper", function () {
+        if (cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0 && cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard") > 0) {
           var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard");
-          console.log("addon_item_index",addon_item_index);
-          cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) +1;
+          console.log("addon_item_index", addon_item_index);
+          cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) + 1;
           cur_pos.rerender_pos_bill_item_new();
+        }
+        else if (cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0) {
+
+          var filtered_addon_by_parent = cur_pos.frm.doc.addons.filter(function (value) {
+            return value.parent_item == cur_pos.items[0].name;
+          });
+          if (filtered_addon_by_parent.length > 0) {
+            var max_item_group = 0;
+            var group_id = 0;
+            max_item_group = parseInt(Math.max.apply(Math, filtered_addon_by_parent.map(function (o) { return o.group_id; }))) + 2;
+            cur_pos.frm.doc.addons.push({ "group_id": max_item_group, "addon": "قياسي - Standard", "parent_qty": 1, "parent_item": cur_pos.items[0].name });
+            cur_pos.rerender_pos_bill_item_new();
           }
+        }
       });
 
       $(me.numeric_keypad).find('.numeric-del').click(function(){
@@ -722,57 +734,6 @@ try {
     }
   }
   erpnext.pos.PointOfSale = PointOfSale;
-
-
 } catch (e) {
   console.log("error", e);
-
-
-//   var idx;
-//  $(".item-cart-items").find(".pos-bill-item, .active").each(function(index,g) {
-//     if($(g).hasClass( "active" )){
-//       idx = g;
-//     }
-//   });
-
-//   var idx;
-//   var cart_list = $(".item-cart-items").find(".pos-bill-item, .active");
-//   for (let i = 0; i < cart_list.length; i++) {
-//     const element = cart_list[i];
-//     if($(cart_list[i]).hasClass( "active" )){
-//       idx = g;
-//     }
-//   }
-//   console.log(idx);
-
 }
-// function dddd(g) {
-//   console.log($(g).hasClass("active"));
-// }
-
-// function mapOrder (array, order, key) {
-
-//   array.sort( function (a, b) {
-//     var A = a[key], B = b[key];
-
-//     if (order.indexOf(A) > order.indexOf(B)) {
-//       return 1;
-//     } else {
-//       return -1;
-//     }
-
-//   });
-
-//   return array;
-// };
-
-
-/**
- * Example:
- */
-
-
-// item_order = cur_pos.items_order.map(p=>p.item_code)
-
-// ordered_array = mapOrder(cur_pos.items, item_order, 'name');
-// console.log("ordered Array ", ordered_array);
