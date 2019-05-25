@@ -9,12 +9,6 @@
 //   document.onmouseup = new Function("return true");
 // }
 
-setTimeout(function() {
-  $('[data-value ="اضافات - Additions To The Sandwich"]').remove();
-  $('[data-value ="اضافات"]').remove();
-}, 3000);
-
-
 try {
   erpnext.pos.PointOfSale = erpnext.pos.PointOfSale.extend({});
 
@@ -39,6 +33,7 @@ try {
 
     print_dialog() {
       console.log("print_dialog offline moode");
+      var me = this;
       if(cur_pos.pos_profile_data.print_after_submit){
         this.print_cashier();
         this.send_to_printers();
@@ -83,35 +78,12 @@ try {
         localStorage.setItem("date", date);
       } catch (e) {
         console.log("e",e);
-
         frappe.throw(__("LocalStorage is full , did not save order or date"))
       }
     }
 
     create_invoice() {
       var invoice_data = {};		
-        // new code add all addons as standalone items
-      // if (cur_pos.frm.doc.addons != null){ 
-      //     var addons = cur_pos.frm.doc.addons;
-      //     var item_dict = {};
-      //     for (var i = addons.length - 1; i >= 0; i--) {
-      //       if(addons[i]["addon"] in item_dict){
-      //         item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]) + parseInt(item_dict[addons[i]["addon"]]);
-      //       }else{
-      //         item_dict[addons[i]["addon"]] = parseInt(addons[i]["parent_qty"]);
-      //       }
-      //       this.item_data.push({"item_code":addons[i]["addon"]});
-      //     }
-      
-      //     for (var i in item_dict) {
-      //       cur_pos.items = cur_pos.get_items(i);
-      //       cur_pos.add_to_cart();
-      //       cur_pos.set_item_details(i, "qty", item_dict[i]);
-      //       cur_pos.set_item_details(i, "rate", cur_pos.price_list_data[i]);      
-      //       cur_pos.update_value();
-      //       }
-      //     }
-   
       this.si_docs = this.get_doc_from_localstorage();
       if (this.frm.doc.offline_pos_name) {
         this.update_invoice();
@@ -128,13 +100,16 @@ try {
       return invoice_data;
     }
 
-    // mandatory_batch_no(){
-      //workaround to make it work while add addons
-    // }
-
-    // validate_serial_no(){
-      //workaround to make it work while add addons
-    // }
+    submit_invoice() {
+      if (this.frm.doc.outstanding_amount > 0) {
+        frappe.throw(__("Please Pay Full Amount"));    
+      }
+      this.change_status();
+      this.update_serial_no();
+      if (this.frm.doc.docstatus == 1) {
+        this.print_dialog();
+      }
+    }
 
     onload(){
       super.onload();      
