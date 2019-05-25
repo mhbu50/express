@@ -102,7 +102,8 @@ try {
 
     submit_invoice() {
       if (this.frm.doc.outstanding_amount > 0) {
-        frappe.throw(__("Please Pay Full Amount"));    
+        frappe.throw(__("Please Pay Full Amount!")); 
+        this.make_payment();   
       }
       this.change_status();
       this.update_serial_no();
