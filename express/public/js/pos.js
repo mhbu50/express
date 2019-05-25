@@ -104,6 +104,7 @@ try {
       if (this.frm.doc.outstanding_amount > 0) {
         frappe.msgprint(__("Please Pay Full Amount!")); 
         this.make_payment();   
+        return;
       }
       this.change_status();
       this.update_serial_no();
