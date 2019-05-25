@@ -102,7 +102,7 @@ try {
 
     submit_invoice() {
       if (this.frm.doc.outstanding_amount > 0) {
-        frappe.throw(__("Please Pay Full Amount!")); 
+        frappe.msgprint(__("Please Pay Full Amount!")); 
         this.make_payment();   
       }
       this.change_status();
