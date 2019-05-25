@@ -169,8 +169,8 @@ try {
 
       var me = this;
       var receipt_html = "";
-      var order_html = "<html><body><table border='1'><tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
-      var order_receipt_table = "<html><body><table border='1'><tr><th colspan='2'>Collection Order</th></tr>";
+      var order_html = "<html><body><table border='1' width='150px'><tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
+      var order_receipt_table = "<html><body><table border='1' width='150px'><tr><th colspan='2'>Collection Order</th></tr>";
       order_receipt_table += "<tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
 
       let to_print={};
