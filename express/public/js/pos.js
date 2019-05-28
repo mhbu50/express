@@ -9,229 +9,51 @@
 //   document.onmouseup = new Function("return true");
 // }
 
-setTimeout(function() {
-  $('[data-value ="All Item Groups"]').remove();
-  $('[data-value ="Raw Material"]').remove();
-  $('[data-value ="Sub Assemblies"]').remove();
-  $('[data-value ="Consumable"]').remove();
-  $('[data-value ="POS Items"]').remove();
-  $('[data-value ="Stock Item"]').remove();
-  $('[data-value ="Processed Raw Material"]').remove();
-  $('[data-value ="اضافات - Additions To The Sandwich"]').remove();
-  $('[data-value ="اضافات"]').remove();
-}, 3000);
-
-
 try {
   erpnext.pos.PointOfSale = erpnext.pos.PointOfSale.extend({});
 
-
-  function send_kds(cart, pos_profile) {
-    //get cart items
-    frappe.call({
-      method: 'express.api.send_cart_kds',
-      args: {
-        "cart": cart,
-        // "pos_profile": me.frm.selected_doc.pos_profile
-      },
-      callback: function(r) {
-        log("bb");
-      }
-    });
-  }
-
 	class PointOfSale extends erpnext.pos.PointOfSale {
-    //for online moode
-    submit_sales_invoice() {
-      var me = this;
-      send_kds(me.frm.selected_doc, me.frm.selected_doc.pos_profile)
-      super.submit_sales_invoice();
+    //for offline model
+    print_document(html,printer){
+      console.log("html",html);
+    //  printer = "PDF";//for test
+     cur_pos.webprint.printHtml(html,printer);
     }
 
-    //for offline model
+    print_cashier() {
+      var html = frappe.render_template("pos_invoice", this.frm.doc);
+      var invoice_copy = 1;
+      if(cur_pos.pos_profile_data.invoice_copy && cur_pos.pos_profile_data.invoice_copy > 1){
+        invoice_copy = cur_pos.pos_profile_data.invoice_copy;
+       }
+       for (var i = 0; i < invoice_copy; i++) {
+         this.print_document(html,cur_pos.pos_profile_data.cashier_printer);
+       }
+     }
+
     print_dialog() {
       console.log("print_dialog offline moode");
       var me = this;
-      var html = frappe.render(me.print_template_data, me.frm.doc);
       if(cur_pos.pos_profile_data.print_after_submit){
-        me.print_document(html);
-        me.send_to_printers();
-        me.make_new_cart();
+        this.print_cashier();
+        this.send_to_printers();
+        this.make_new_cart();
         return;
       }
+
       this.msgprint = frappe.msgprint(
         `<a class="btn btn-primary print_doc"
           style="margin-right: 5px;">${__('Print')}</a>
         <a class="btn btn-default new_doc">${__('New')}</a>`);
 
       $('.print_doc').click(function () {
-        for (var i = 0; i < cur_pos.pos_profile_data.invoice_copy; i++) {
-          //nedd to change with jquery print lib
-          me.print_document(html);
-        }
-        me.send_to_printers();
-      })
+        me.print_cashier();
+      });
 
       $('.new_doc').click(function () {
         me.msgprint.hide()
         me.make_new_cart()
-      })
-    }
-
-    print_document(html){
-      $('<iframe>', {
-        name: 'myiframe',
-        class: 'printFrame'
-      })
-      .appendTo('body')
-      .contents().find('body')
-      .append(html);
-
-      window.frames['myiframe'].focus();
-      window.frames['myiframe'].print();
-
-      setTimeout(() => { $(".printFrame").remove(); }, 1000)
-    }
-
-    send_to_printers(){
-      function uniques(arr,feild) {
-        var a = [];
-        for (var i=0, l=arr.length; i<l; i++)
-            if (a.indexOf(arr[i][feild]) === -1 && arr[i][feild] !== '')
-                a.push(arr[i][feild]);
-        return a;
-        }
-        if(this.frm.doc.is_return && this.frm.doc.is_return == 1 ){
-          return;
-        }
-      debugger;
-      var me = this;
-      var receipt = "";
-      var order_receipt = "\nCollection Order\n\n Order:#" + me.frm.doc.order + "\n";
-      var group_item_cart =  uniques(cur_pos.frm.doc.items,"item_group");
-      // console.log("group_item_cart",group_item_cart);
-      //get all group in items cart
-      $.each(group_item_cart, function(index,group) {
-        if(group == "اضافات - Additions To The Sandwich"){
-          return;
-        }
-        //take group printer IP
-        var ip = cur_pos.pos_profile_data.item_groups.find(x => x.item_group === group).printer;
-        console.log("ip",ip);
-        receipt = "\n\n\n\n" + group + "\n Order:#" + me.frm.doc.order + "\n";
-        //filter items by group in cart
-				var items_cart = $.grep(cur_pos.frm.doc.items, function(n,i){
-          return n.item_group == group;
-        });
-        console.log("\n -----------------------------------------\ngroup",group);
-        // console.log(" items_cart : " ,items_cart);
-        //loop items_cart
-        $.each(items_cart, function(index,ic) {
-          // console.log("ic",ic.item_code);
-          //check if it has addone
-          var item_addons_num = cur_pos.frm.doc.addons.filter(function(value){
-            return value.parent_item == ic.item_code;
-          }).length ;
-          // console.log("item_addons_num",item_addons_num);
-          if(item_addons_num == 0){
-          let qty = cur_pos.frm.doc.items.find(x => x.item_code === ic.item_code).qty;
-          console.log("*******************************");
-          console.log("Item = "+ ic.item_code +" Qty = " + qty);
-
-          receipt += "*******************************\n";
-          receipt += "Item = "+ ic.item_code +" Qty = " + qty+"\n";
-
-          order_receipt += "*******************************\n";
-          order_receipt += "Item = "+ ic.item_code +" Qty = " + qty+"\n";
-          }
-          //filter addons_table by item
-          var item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
-          return n.parent_item == ic.item_code;
-          });
-          // console.log("item_addon",item_addons);
-
-          //get uniques parents_item from addons
-          var unique_gruop = uniques(item_addons,"group_id");
-          // console.log("unique_gruop",unique_gruop);
-
-          $.each(unique_gruop ,function(index,g) {
-            // console.log("g",g);
-            //filter by group_id
-            var by_group = item_addons.filter(function(value){
-              return value.group_id == g;
-                });
-
-            // console.log("by_group",by_group);
-            console.log("*******************************");
-            console.log("Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty);
-            console.log("*******************************");
-
-            receipt += "*******************************\n";
-            receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
-            receipt += "*******************************\n";
-
-            order_receipt += "*******************************\n";
-            order_receipt += "Item = "+ ic.item_code +" Qty = "+ by_group[0].parent_qty +"\n";
-            order_receipt += "*******************************\n";
-
-            $.each(by_group ,function(index,bg) {
-              // console.log("\t\taddon: ",bg.addon.split("-")[1].trim());
-              console.log("\tAddon: ",bg.addon.split("-")[1].trim() );
-
-              receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
-              order_receipt += "\tAddon: "+ bg.addon.split("-")[1].trim() + "\n";
-            });
-          });
-        });
-        send_to_printer(ip,receipt);
       });
-      //send complete order to order receipt printer
-      if(cur_pos.pos_profile_data.printer_ip){
-        console.log("order_receipt",order_receipt);
-        send_to_printer(cur_pos.pos_profile_data.printer_ip,order_receipt);
-      }
-
-      //send to remote local printer
-      function send_to_printer(ip,receipt) {
-        var builder = new epson.ePOSBuilder();
-        builder.addLayout(builder.LAYOUT_RECEIPT, 580);
-        builder.addTextLang('en').addTextSmooth(true);
-
-        // append message
-        builder.addTextStyle(false, false, true);
-        builder.addText(receipt+'\n');
-        builder.addTextStyle(false, false, false);
-        builder.addFeedUnit(16);
-
-        // append paper cutting
-        builder.addCut();
-
-        var url = 'https://' + ip + '/cgi-bin/epos/service.cgi?devid=local_printer&timeout=60000';
-        var epos = new epson.ePOSPrint(url);
-
-        // register callback function
-        epos.onreceive = function (res) {
-            // close print dialog
-            console.log("Order Sent");
-            // print failure
-            if (!res.success) {
-                // show error message
-                console.log("Show error message");
-            }
-        }
-
-        // register callback function
-        epos.onerror = function (err) {
-            // show error message
-            console.log("onerror");
-        }
-
-        epos.send(builder.toString());
-
-        //destroy class instance
-        epos = null;
-        builder = null;
-      }
     }
 
     create_new(){
@@ -256,22 +78,52 @@ try {
         localStorage.setItem("date", date);
       } catch (e) {
         console.log("e",e);
-
         frappe.throw(__("LocalStorage is full , did not save order or date"))
       }
     }
 
+    create_invoice() {
+      var invoice_data = {};		
+      this.si_docs = this.get_doc_from_localstorage();
+      if (this.frm.doc.offline_pos_name) {
+        this.update_invoice();
+      } else {
+        this.frm.doc.offline_pos_name = $.now();
+        this.frm.doc.posting_date = frappe.datetime.get_today();
+        this.frm.doc.posting_time = frappe.datetime.now_time();
+        this.frm.doc.pos_profile = this.pos_profile_data['name'];
+        invoice_data[this.frm.doc.offline_pos_name] = this.frm.doc;
+        this.si_docs.push(invoice_data);
+        this.update_localstorage();
+        this.set_primary_action();
+      }
+      return invoice_data;
+    }
+
+    submit_invoice() {
+      if (this.frm.doc.outstanding_amount > 0) {
+        frappe.msgprint(__("Please Pay Full Amount!")); 
+        this.make_payment();   
+        return;
+      }
+      this.change_status();
+      this.update_serial_no();
+      if (this.frm.doc.docstatus == 1) {
+        this.print_dialog();
+      }
+    }
+
     onload(){
-      super.onload();
+      super.onload();      
       var me = this;
+      console.log("me",me);
       frappe.call({
         method: "express.api.get_addon_list",
         freeze: true,
         callback: function (r) {
           console.log("get_data_from_server");
           var addon_list = r.message;
-          console.log("addon_list",addon_list);
-
+          console.log("r.message",r.message);
           localStorage.setItem('addon_list', JSON.stringify(addon_list));
           me.addon_list = addon_list;
         }
@@ -282,18 +134,95 @@ try {
       }
     }
 
+    send_to_printers(){
+      //debugger;
+    function uniques(arr,feild) {
+      var a = [];
+      for (var i=0, l=arr.length; i<l; i++)
+          if (a.indexOf(arr[i][feild]) === -1 && arr[i][feild] !== '')
+              a.push(arr[i][feild]);
+      return a;
+      }
+
+      var me = this;
+      var receipt_html = "";
+      var order_html = "<html><body><table border='1'><tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
+      var order_receipt_table = "<html><body><table border='1'><tr><th colspan='2'>Collection Order</th></tr>";
+      order_receipt_table += "<tr><th colspan='2'>Order:#" + me.frm.doc.order + "</th></tr>";
+
+      let to_print={};
+
+      for (var printer of cur_pos.printer_list) {
+        to_print[printer] = [];
+      }
+      //loop items_cart
+      $.each(cur_pos.frm.doc.items, function(index,ic) {
+        //debugger;
+        //filter addons_table by item
+        var item_addons = $.grep(cur_pos.frm.doc.addons, function(n,i){
+        return n.parent_item == ic.item_code;
+        });
+
+        to_print[ic.printer].push({"item_code":ic.item_code,"item_name":ic.item_name,"qty":ic.qty,"addons":item_addons});
+      });
+
+      //loop to send to_print to printers
+      for (printer in to_print) {
+        receipt_html = "";
+        receipt_html = order_html;
+        console.log("printer",printer);
+        let item_list = to_print[printer];
+        if(item_list.length == 0){
+          continue;
+        }
+        item_list.forEach(function(i) {
+          receipt_html += "<tr><td>" + i.item_name + "</td> <td> "+ i.qty+"</td></tr>";
+          order_receipt_table += "<tr><td>" + i.item_name + "</td> <td> "+ i.qty+"</td></tr>";
+          let addons = i.addons;
+          let unique_gruop = uniques(addons,"group_id");
+          unique_gruop.forEach(function(g){
+            var by_group_list = addons.filter(function(value){
+              return value.group_id == g;
+                });
+                for (let b = 0; b < by_group_list.length; b++) {
+                  const element = by_group_list[b];
+                  receipt_html += "<tr><td  style='padding-left: 2em;'>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
+                }
+           
+          })
+      });
+      receipt_html += "</table></body></html>";
+      //console.log("html",receipt_html);
+      this.print_document(receipt_html,printer);
+      }
+        order_receipt_table += "</table></body></html>";
+      //send complete order to order receipt printer
+      if(cur_pos.pos_profile_data.collection_orders_printer){
+        this.print_document(order_receipt_table,cur_pos.pos_profile_data.collection_orders_printer);
+      }
+      console.log("to_print",to_print);
+    }
+
     make_control (){
       super.make_control();
       console.log("make_control this");
+      this.webprint = new WebPrint(true, {
+        relayHost: cur_pos.pos_profile_data.address,
+        relayPort: cur_pos.pos_profile_data.port
+       });
       var me = this;
+      console.log("me.pos_profile_data.restaurant_menu",me.pos_profile_data.restaurant_menu);
       frappe.call({
-        method: "express.api.get_items_order",
+        method: "express.api.get_items_order_and_printers",
+        args: {
+    			p_restaurant_menu:  me.pos_profile_data.restaurant_menu
+    		},
         freeze: true,
         callback: function (r) {
 
-          var items_order = r.message;
+          var items_order = r.message[0];
+          me.printer_list = r.message[1].filter(Boolean);
           console.log("items_order",items_order);
-
           localStorage.setItem('items_order', JSON.stringify(items_order));
           me.items_order = items_order;
         }
@@ -303,32 +232,50 @@ try {
       }
 
       $(cur_pos.wrapper).on("click", ".pos-item-wrapper", function () {
-          if(cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0 &&
-            cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard") > 0){
+        if (cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0 && cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard") > 0) {
           var addon_item_index = cur_pos.frm.doc.addons.findIndex(p => p.parent_item == cur_pos.items[0].name && p.addon == "قياسي - Standard");
-          console.log("addon_item_index",addon_item_index);
-          cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) +1;
+          console.log("addon_item_index", addon_item_index);
+          cur_pos.frm.doc.addons[addon_item_index].parent_qty = parseInt(cur_pos.frm.doc.addons[addon_item_index].parent_qty) + 1;
           cur_pos.rerender_pos_bill_item_new();
+        }
+        else if (cur_pos.frm.doc.docstatus == 0 && cur_pos.frm.doc.addons.length > 0) {
+
+          var filtered_addon_by_parent = cur_pos.frm.doc.addons.filter(function (value) {
+            return value.parent_item == cur_pos.items[0].name;
+          });
+          if (filtered_addon_by_parent.length > 0) {
+            var max_item_group = 0;
+            max_item_group = parseInt(Math.max.apply(Math, filtered_addon_by_parent.map(function (o) { return o.group_id; }))) + 2;
+            cur_pos.frm.doc.addons.push({ "group_id": max_item_group, "addon": "قياسي - Standard", "parent_qty": 1, "parent_item": cur_pos.items[0].name });
+            cur_pos.rerender_pos_bill_item_new();
           }
+        }
       });
+
+      $(me.numeric_keypad).find('.numeric-del').click(function(){
+  			if(cur_pos.numeric_id) {
+  			} else {
+  				cur_pos.frm.doc.addons = cur_pos.frm.doc.addons.filter(function(f){
+            return f.parent_item != cur_pos.items[0].name;
+          })
+  			}
+  		});
     }
 
-    get_sorted_item_groups(){
-      let list = [];
-      $.each(cur_pos.pos_profile_data.item_groups, function(i, data) {
-        list[i] = { "item_group":data.item_group,"image":data.image};
-      });
-      return list;
-    }
+    add_new_item_to_grid() {
+      super.add_new_item_to_grid();
+  		this.child.printer = this.items[0].printer;
+  	}
+
     make_search(){
       super.make_search();
       sorted_item_groups = this.get_sorted_item_groups();
       let item_groups_html = sorted_item_groups.map(function(data) {
 
-        return `<button class='button' data-value= '${data.item_group}' style='text-align: center; text-decoration: none; display: inline-block;
+        return `<button class='button' data-value= '${data}' style='text-align: center; text-decoration: none; display: inline-block;
          font-weight: bold; margin: 4px 2px; cursor: pointer;'>
          <span style='background: url(${data.image}) no-repeat;float: left;
-          width: 32px; height: 32px; margin-right: 10px'></span>${data.item_group}</button>`
+          width: 32px; height: 32px; margin-right: 10px'></span>${data}</button>`
 
         // return "<button style='padding: 2px 5px; margin: 2px; font-weight: bold;  content: \"\" ; display: inline-block; margin-right: 5px; vertical-align: text-top; background-color: transparent; background-position : center center; background-repeat:no-repeat; background-image : url(" + data.image + "); class='btn' data-value='" + data.item_group+"'>" + data.item_group + "</button>";
       }).join("");
@@ -604,7 +551,7 @@ try {
 
     $("#save_dialog").click(
         function() {
-          debugger;
+          // debugger;
             var addons_list = [];
             $(".items-for-addons").each(function(i) {
                 var addon = {};
@@ -658,7 +605,6 @@ try {
 
     rerender_pos_bill_item_new(){
       var addons = cur_pos.frm.doc.addons;
-      var array_addons_for_display = [];
       var $items = this.wrapper.find(".items").empty();
 
       var groupBy = function(xs, key) { return xs.reduce(function(rv, x) { (rv[x[key]] = rv[x[key]] || []).push(x); return rv; }, {}); };
@@ -737,7 +683,6 @@ try {
       if(addons.length >0){
         var data = addons;
         var parent_template = "";
-        var result = "";
         var cleand_addon = [];
         var addons_list = cur_pos.item_data.filter(obj => {
           return obj.item_group === "اضافات - Additions To The Sandwich"
@@ -813,57 +758,6 @@ try {
     }
   }
   erpnext.pos.PointOfSale = PointOfSale;
-
-
 } catch (e) {
   console.log("error", e);
-
-
-//   var idx;
-//  $(".item-cart-items").find(".pos-bill-item, .active").each(function(index,g) {
-//     if($(g).hasClass( "active" )){
-//       idx = g;
-//     }
-//   });
-
-//   var idx;
-//   var cart_list = $(".item-cart-items").find(".pos-bill-item, .active");
-//   for (let i = 0; i < cart_list.length; i++) {
-//     const element = cart_list[i];
-//     if($(cart_list[i]).hasClass( "active" )){
-//       idx = g;
-//     }
-//   }
-//   console.log(idx);
-
 }
-// function dddd(g) {
-//   console.log($(g).hasClass("active"));
-// }
-
-// function mapOrder (array, order, key) {
-
-//   array.sort( function (a, b) {
-//     var A = a[key], B = b[key];
-
-//     if (order.indexOf(A) > order.indexOf(B)) {
-//       return 1;
-//     } else {
-//       return -1;
-//     }
-
-//   });
-
-//   return array;
-// };
-
-
-/**
- * Example:
- */
-
-
-// item_order = cur_pos.items_order.map(p=>p.item_code)
-
-// ordered_array = mapOrder(cur_pos.items, item_order, 'name');
-// console.log("ordered Array ", ordered_array);
