@@ -333,9 +333,10 @@ try {
 
                 } else {
                 $("#remain").text(remain);
-                var addons = cur_pos.item_data.filter(obj => {
-                  return obj.item_group === "اضافات - Additions To The Sandwich"
-                });
+                var item_parent = $("#new_nump_addons").attr("data-parent-item");
+                var addons = cur_pos.addon_list.filter(obj => {
+                  return obj.item_code === item_parent
+                  });
 
                 var result = "";
                 for (var addon in addons){
@@ -421,10 +422,10 @@ try {
 			return obj.item_code === item_parent
 		  });
 		if(x_addons.length <= 0){
-			var y_addons = cur_pos.item_data.filter(obj => {
-				return obj.item_group === "اضافات - Additions To The Sandwich"
-			  });
-			addons = y_addons;
+			// var y_addons = cur_pos.item_data.filter(obj => {
+			// 	return obj.item_group === "اضافات - Additions To The Sandwich"
+			//   });
+			// addons = y_addons;
 		}else{
         	console.log("x_addons",x_addons);
 			x_addons = x_addons.map(function (obj) {
