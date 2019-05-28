@@ -333,17 +333,18 @@ try {
 
                 } else {
                 $("#remain").text(remain);
-                var addons = cur_pos.item_data.filter(obj => {
-                  return obj.item_group === "اضافات - Additions To The Sandwich"
-                });
+                var item_parent = $("#new_nump_addons").attr("data-parent-item");
+                var addons = cur_pos.addon_list.filter(obj => {
+                  return obj.item_code === item_parent
+                  });
 
                 var result = "";
-                for (var addon in addons){
+                addons.forEach(a => {                              
                   result = result +
                   `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
-            <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-            type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`;
-                };
+                  <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
+                  type="checkbox" value="${a.addon}">${a.addon}</label>`;
+                });
                 var addons_template = ` <div class="modal-body">
                 <a  class="collapsible-custom" style="display: flex;margin-bottom: 20px;" onclick="cur_pos.hide_section(this)" row">
                 <h3 class="col-xs-10" data-value = ${valueForSelectedItem}>
@@ -421,10 +422,10 @@ try {
 			return obj.item_code === item_parent
 		  });
 		if(x_addons.length <= 0){
-			var y_addons = cur_pos.item_data.filter(obj => {
-				return obj.item_group === "اضافات - Additions To The Sandwich"
-			  });
-			addons = y_addons;
+			// var y_addons = cur_pos.item_data.filter(obj => {
+			// 	return obj.item_group === "اضافات - Additions To The Sandwich"
+			//   });
+			// addons = y_addons;
 		}else{
         	console.log("x_addons",x_addons);
 			x_addons = x_addons.map(function (obj) {
