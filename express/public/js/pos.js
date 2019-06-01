@@ -679,8 +679,8 @@ try {
         var data = addons;
         var parent_template = "";
         var cleand_addon = [];
-        var addons_list = cur_pos.item_data.filter(obj => {
-          return obj.item_group === "اضافات - Additions To The Sandwich"
+        var addons_list = cur_pos.addon_list.filter(obj => {
+          return obj.item_code === item_code
         });
 
         for(var row in data){
