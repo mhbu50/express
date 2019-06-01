@@ -83,7 +83,7 @@ try {
     }
 
     create_invoice() {
-      var invoice_data = {};		
+      var invoice_data = {};
       this.si_docs = this.get_doc_from_localstorage();
       if (this.frm.doc.offline_pos_name) {
         this.update_invoice();
@@ -102,8 +102,8 @@ try {
 
     submit_invoice() {
       if (this.frm.doc.outstanding_amount > 0) {
-        frappe.msgprint(__("Please Pay Full Amount!")); 
-        this.make_payment();   
+        frappe.msgprint(__("Please Pay Full Amount!"));
+        this.make_payment();
         return;
       }
       this.change_status();
@@ -114,7 +114,7 @@ try {
     }
 
     onload(){
-      super.onload();      
+      super.onload();
       var me = this;
       console.log("me",me);
       frappe.call({
@@ -188,7 +188,7 @@ try {
                   const element = by_group_list[b];
                   receipt_html += "<tr><td  style='padding-left: 2em;'>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
                 }
-           
+
           })
       });
       receipt_html += "</table></body></html>";
@@ -253,9 +253,9 @@ try {
       });
 
       $(me.numeric_keypad).find('.numeric-del').click(function(){
-  			if(cur_pos.items[0]) {
+  			if(cur_pos.item_code) {
   				cur_pos.frm.doc.addons = cur_pos.frm.doc.addons.filter(function(f){
-            return f.parent_item != cur_pos.items[0].item_code;
+            return f.parent_item != cur_pos.item_code;
           })
   			}
   		});
@@ -338,7 +338,7 @@ try {
                   });
 
                 var result = "";
-                addons.forEach(a => {                              
+                addons.forEach(a => {
                   result = result +
                   `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
                   <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
