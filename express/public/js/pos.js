@@ -253,10 +253,9 @@ try {
       });
 
       $(me.numeric_keypad).find('.numeric-del').click(function(){
-  			if(cur_pos.numeric_id) {
-  			} else {
+  			if(cur_pos.items[0]) {
   				cur_pos.frm.doc.addons = cur_pos.frm.doc.addons.filter(function(f){
-            return f.parent_item != cur_pos.items[0].name;
+            return f.parent_item != cur_pos.items[0].item_code;
           })
   			}
   		});
