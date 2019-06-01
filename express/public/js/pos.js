@@ -420,13 +420,8 @@ try {
 		var x_addons = cur_pos.addon_list.filter(obj => {
 			return obj.item_code === item_parent
 		  });
-		if(x_addons.length <= 0){
-			// var y_addons = cur_pos.item_data.filter(obj => {
-			// 	return obj.item_group === "اضافات - Additions To The Sandwich"
-			//   });
-			// addons = y_addons;
-		}else{
-        	console.log("x_addons",x_addons);
+
+      console.log("x_addons",x_addons);
 			x_addons = x_addons.map(function (obj) {
 				return {
 					 name: obj.addon,
@@ -437,7 +432,7 @@ try {
 				return a.addon_order-b.addon_order
 			});
 			addons = x_addons;
-		}
+
 
         var result = "";
         for (var addon in addons){
