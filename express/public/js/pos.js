@@ -723,15 +723,15 @@ try {
             for (var i =  cleand_addon[row].addon.length - 1; i >= 0; i--) {
               x.push(cleand_addon[row].addon[i].name);
             }
-            for(var addon in addons_list){
-                if(x.includes(addons_list[addon].name)){
+            for(var al in addons_list){
+                if(x.includes(addons_list[al].addon)){
                     addons_template = addons_template + `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
                     <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-                    type="checkbox" checked  value="${addons_list[addon].name}">${addons_list[addon].name}</label>`
+                    type="checkbox" checked  value="${addons_list[al].addon}">${addons_list[al].addon}</label>`
                 }else{
                     addons_template = addons_template + `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
                     <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-                      type="checkbox" value="${addons_list[addon].name}">${addons_list[addon].name}</label>`
+                      type="checkbox" value="${addons_list[al].addon}">${addons_list[al].addon}</label>`
                 }
             }
 
