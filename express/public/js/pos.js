@@ -184,10 +184,7 @@ try {
             var by_group_list = addons.filter(function(value){
               return value.group_id == g;
                 });
-                for (let b = 0; b < by_group_list.length; b++) {
-                  const element = by_group_list[b];
-                  receipt_html += "<tr><td  style='padding-left: 2em;'>" + element.addon + "</td> <td> "+ element.parent_qty+"</td></tr>";
-                }
+                receipt_html += "<tr><td  style='padding-left: 2em;'>" + by_group_list.map(u => u.addon).join('<br>') + "</td> <td> "+ by_group_list[0].parent_qty+"</td></tr>";
 
           })
       });
