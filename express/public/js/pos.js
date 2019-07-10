@@ -422,6 +422,7 @@ try {
 			x_addons = x_addons.map(function (obj) {
 				return {
 					 name: obj.addon,
+           price:obj.price,
 					 addon_order: obj.addon_order
 				 };
 			 });
@@ -430,25 +431,12 @@ try {
 			});
 			addons = x_addons;
 
-
         var result = "";
         for (var addon in addons){
             result = result +
             `<label class="checkbox-inline" style="padding: 0px 40px 40px 30px;font-size: 18px;">
             <input class= "addons_add" style=" transform: scale(3) !important; margin-left: -26px;"
-            type="checkbox" value="${addons[addon].name}">${addons[addon].name}</label>`;
-
-            // `<label style='padding: 0px 40px 40px 30px;font-size: 18px;'>
-            //   <input type='hidden' name='alarm' value='False'/>
-            //   <input class='custom-checkbox-input' name='alarm' value='${addons[addon].name}' type='checkbox'>
-            //   <span class='custom-checkbox-text'>${addons[addon].name}</span>
-            // </label>`;
-
-            // result = result +
-            // `<span class="button-checkbox">
-            // <button type="button" class="btn" data-color="primary">${addons[addon].name}</button>
-            // <input type="checkbox"  value="${addons[addon].name} class="hidden"/>
-            // </span>`
+            type="checkbox" data-price="${addons[addon].price}" value="${addons[addon].name}">${addons[addon].name}</label>`;
         };
 
         var addons_template = ` <div class="modal-body">
