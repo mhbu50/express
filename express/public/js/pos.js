@@ -203,11 +203,51 @@ try {
     make_control (){
       super.make_control();
       console.log("make_control this");
+      //init WebPrinter
       this.webprint = new WebPrint(true, {
         relayHost: cur_pos.pos_profile_data.address,
         relayPort: cur_pos.pos_profile_data.port
        });
       var me = this;
+      if (cur_pos.pos_profile_data.restaurant_mood) {
+        //create servant button
+        $(".pos-bill-toolbar").append(`<button class='btn btn-default servant-btn' style='margin-left: 12px;width: 40px;'>
+      <img src="/assets/complement/images/servant.png">
+      </button>`);
+
+        this.page.wrapper.on('click', '.servant-btn', function () {
+          var dialog = new frappe.ui.Dialog({
+            title: __("Select Servant"),
+            fields: [
+              {
+                "fieldtype": "HTML",
+                "label": __("Servant"),
+                "fieldname": "servant",
+                "options": "<div class=\"servant-list\"></div>"
+              }
+
+            ]
+          });
+          dialog.show();
+
+
+          $.each(cur_pos.pos_profile_data.applicable_for_users, function (index, obj) {
+            $(".servant-list").append(frappe.render_template("pos_servant", {
+              servant_code: obj.user,
+              servant_image: "/assets/complement/images/servant.png"
+            }));
+          });
+
+          $(".servant-wrapper").on("click", function () {
+            console.log($(this).data("servant-code"));
+            cur_pos.frm.doc.servant = $(this).data("servant-code");
+            dialog.hide();
+          });
+
+        });
+      }
+
+      //get items order and printers
       console.log("me.pos_profile_data.restaurant_menu",me.pos_profile_data.restaurant_menu);
       frappe.call({
         method: "express.api.get_items_order_and_printers",
@@ -257,7 +297,7 @@ try {
   			}
   		});
     }
-
+    //add prenter for selected item
     add_new_item_to_grid() {
       super.add_new_item_to_grid();
   		this.child.printer = this.items[0].printer;
