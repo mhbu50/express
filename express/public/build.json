@@ -1,9 +1,5 @@
 {
-    "js/express.js": [
-      "public/js/jquery.numpad.js"
-    ],
     "css/express.css":[
-      "public/css/jquery.numpad.css",
       "public/css/style.css"
     ]
 }
