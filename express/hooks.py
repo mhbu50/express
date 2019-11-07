@@ -27,7 +27,7 @@ app_include_css = "/assets/css/express.css"
 page_js = {"pos": "public/js/pos.js", "point-of-sale": "public/js/pos.js","accu_pos":"public/js/pos.js"}
 
 # include js in doctype views
-doctype_js = {"Item" : "public/js/item.js"}
+#doctype_js = {"Item" : "public/js/item.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
