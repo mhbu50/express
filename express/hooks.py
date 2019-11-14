@@ -24,10 +24,10 @@ app_include_css = "/assets/css/express.css"
 # web_include_js = "/assets/express/js/express.js"
 
 # include js in page
-
+ 
 
 # include js in doctype views
-doctype_js = {"Item" : "public/js/item.js"}
+#doctype_js = {"Item" : "public/js/item.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
