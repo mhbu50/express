@@ -24,7 +24,7 @@ app_include_css = "/assets/css/express.css"
 # web_include_js = "/assets/express/js/express.js"
 
 # include js in page
-# page_js = {"pos": "public/js/pos.js", "point-of-sale": "public/js/pos.js","accu_pos":"public/js/pos.js"}
+ 
 
 # include js in doctype views
 #doctype_js = {"Item" : "public/js/item.js"}
@@ -34,7 +34,7 @@ app_include_css = "/assets/css/express.css"
 
 # Home Pages
 # ----------
-on_session_creation = "express.api.on_session_creation"
+# on_session_creation = "express.api.on_session_creation"
 # application home page (will override Website Settings)
 # home_page = "login"
 

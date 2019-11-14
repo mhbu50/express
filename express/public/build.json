@@ -1,5 +1,7 @@
 {
+    "js/express.js": [
+
+    ],
     "css/express.css":[
-      "public/css/style.css"
     ]
 }
