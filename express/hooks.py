@@ -33,6 +33,19 @@ app_license = "MIT"
 # Home Pages
 # ----------
 on_session_creation = "express.api.on_session_creation"
+
+fixtures = [
+    {
+        'dt': 'Property Setter', 
+        'filters':[
+            ['name', 'in', [
+                'Purchase Receipt Item-uom-read_only',
+                'Purchase Receipt Item-read_only_onload',
+                'Purchase Receipt Item-barcode-hidden'
+            ]]
+        ]
+        }
+]
 # application home page (will override Website Settings)
 # home_page = "login"
 
