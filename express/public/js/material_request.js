@@ -9,6 +9,7 @@ frappe.ui.form.on('Material Request Item', {
             .then( r => {
                 if (r.message){
                     row.uom = r.message.uom;
+                    row.conversion_factor = r.message.conversion_factor;
                     frm.refresh_field('items')
                 }
             })
@@ -21,6 +22,7 @@ frappe.ui.form.on('Material Request Item', {
             .then( r => {
                 if (r.message){
                     row.uom = r.message.uom;
+                    row.conversion_factor = r.message.conversion_factor;
                     frm.refresh_field('items')
                 }
             })
