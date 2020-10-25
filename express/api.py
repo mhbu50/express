@@ -23,3 +23,10 @@ def on_session_creation(login_manager):
 			["home_page_link"], as_dict=1)
 
 	frappe.local.response["home_page"] = info.home_page_link or "/desk"
+
+@frappe.whitelist()
+def get_order_item_uom(item_code):
+	doc = frappe.get_doc('Order Item List')
+	for row in doc.items:
+		if row.item == item_code:
+			return row
