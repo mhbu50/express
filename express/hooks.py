@@ -25,7 +25,12 @@ app_license = "MIT"
 # page_js = {"pos": "public/js/pos.js", "point-of-sale": "public/js/pos.js","accu_pos":"public/js/pos.js"}
 
 # include js in doctype views
-doctype_js = {"Material Request" : "public/js/material_request.js"}
+doctype_js = {
+    "Material Request" : "public/js/material_request.js",
+    "Stock Reconciliation" : "public/js/stock_reconciliation.js",
+    "Purchase Invoice" : "public/js/purchase_invoice.js",
+    "Sales Invoice" : "public/js/sales_invoice.js"
+    }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
