@@ -29,7 +29,8 @@ doctype_js = {
     "Material Request" : "public/js/material_request.js",
     "Stock Reconciliation" : "public/js/stock_reconciliation.js",
     "Purchase Invoice" : "public/js/purchase_invoice.js",
-    "Sales Invoice" : "public/js/sales_invoice.js"
+    "Sales Invoice" : "public/js/sales_invoice.js",
+    "Stock Entry" : "public/js/stock_entry.js"
     }
 doctype_list_js = {
     "Stock Reconciliation" : "public/js/stock_reconciliation_list.js",
